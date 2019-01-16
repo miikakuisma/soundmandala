@@ -93,7 +93,6 @@ export class BreakTimer extends React.Component {
     if (this.state.running) {
       return <View>
         <Button onPress={this.handleCancel.bind(this)} title='Cancel' />
-        <Text style={styles.timeLeft}>{this.state.timerValue}</Text>
       </View>
     }
     if (this.state.completed) {
@@ -106,9 +105,9 @@ export class BreakTimer extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  timeLeft: {
-    color: Colors.white,
-    fontSize: 64,
-    textAlign: 'center'
-  }
+  // timeLeft: {
+  //   color: Colors.white,
+  //   fontSize: 64,
+  //   textAlign: 'center'
+  // }
 })

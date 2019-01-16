@@ -37,7 +37,8 @@ export default class HomeScreen extends React.Component {
     super(props)
     this.state = {
       pauseDuration: 1,
-      pauseActive: false
+      pauseActive: false,
+      timerValue: null
     }
   }
 
@@ -75,6 +76,10 @@ export default class HomeScreen extends React.Component {
     this.setState({ pauseDuration: value })
   }
 
+  onTimerUpdate (value) {
+    this.setState({ timerValue: value })
+  }
+
   createNotification (minutes) {
     const localNotification = {
       title: 'Pauseground',
@@ -110,6 +115,9 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
         <ImageBackground source={require('../assets/images/background.jpg')} style={{width: '100%', height: '100%'}}>
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+            <View styles={styles.timerView}>
+              <Text style={styles.timeLeft}>{this.state.timerValue}</Text>
+            </View>
             <View style={styles.welcomeContainer}>
               {/*<TouchableOpacity onPress={this._handlePressLogo}>
                 <Image
@@ -131,6 +139,7 @@ export default class HomeScreen extends React.Component {
                 duration={this.state.pauseDuration}
                 autorun={false}
                 onStart={this.startPause.bind(this)}
+                onUpdate={this.onTimerUpdate.bind(this)}
                 onCancel={this.cancelPause.bind(this)}
                 onCompleted={this.completedPause.bind(this)}
               />
@@ -160,14 +169,21 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 30,
   },
-  welcomeContainer: {
-    position: 'absolute',
-    top: Layout.window.height / 2,
-    left: 0,
-    right: 0,
+  timerView: {
+    flex: 1
+  },
+  timeLeft: {
+    color: Colors.white,
+    height: Layout.window.height / 2,
+    paddingTop: '50%',
+    fontSize: 84,
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
+    textAlign: 'center'
+  },
+  welcomeContainer: {
+    height: (Layout.window.height / 2) - 80,
+    paddingTop: '20%',
+    alignItems: 'center'
   },
   welcomeImage: {
     width: 100,
