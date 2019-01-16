@@ -34,18 +34,14 @@ export class BreakTimer extends React.Component {
   }
 
   _handleAppStateChange = (nextAppState) => {
-    console.log(nextAppState)
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-      console.log('App has come to the foreground!')
       const timeAway = Date.now() - leftAppTimestamp
       const updatedTimerValue = leftAppTimerValue - Math.round(timeAway/1000)
-      console.log('Went away for ', timeAway, ' update timer to ', updatedTimerValue)
       this.setState({ timerValue: updatedTimerValue })
     }
     if (nextAppState === 'inactive') {
       leftAppTimestamp = Date.now()
       leftAppTimerValue = this.state.timerValue
-      console.log('going inactive with timer value ' + leftAppTimerValue, leftAppTimestamp)
     }
     this.setState({appState: nextAppState})
   }

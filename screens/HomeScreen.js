@@ -49,8 +49,8 @@ export default class HomeScreen extends React.Component {
   listenForNotifications () {
     Notifications.addListener(notification => {
       if (notification.origin === 'received' && Platform.OS === 'ios') {
-        Alert.alert('Notification was triggered')
-        console.log(notification)
+        // Alert.alert('Notification was triggered')
+        // console.log(notification)
       }
     })
   }
@@ -99,8 +99,6 @@ export default class HomeScreen extends React.Component {
     ).then((response) => {
       notificationID = response
     })
-
-    // Notifications.presentLocalNotificationAsync(localnotification)
   }
 
   cancelNotification () {
