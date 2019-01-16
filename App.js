@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
-import { AppLoading, Asset, Font, Icon } from 'expo';
+import { AppLoading, Asset, Font, Icon, Audio } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 
 export default class App extends React.Component {
@@ -42,9 +42,9 @@ export default class App extends React.Component {
         'nunito-regular': require('./assets/fonts/Nunito-Regular.ttf'),
         'nunito-semibold': require('./assets/fonts/Nunito-SemiBold.ttf'),
         'nunito-bold': require('./assets/fonts/Nunito-Bold.ttf')
-      }),
-    ]);
-  };
+      })
+    ])
+  }
 
   _handleLoadingError = error => {
     // In this case, you might want to report the error to your error
