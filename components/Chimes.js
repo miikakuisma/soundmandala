@@ -11,23 +11,31 @@ const chimes = [
   },
   {
     name: 'two',
-    sound: require('../assets/audio/2_b.m4a')
+    sound: require('../assets/audio/2_c.m4a')
   },
   {
     name: 'three',
-    sound: require('../assets/audio/3_c.m4a')
+    sound: require('../assets/audio/3_e.m4a')
   },
   {
     name: 'four',
-    sound: require('../assets/audio/4_e.m4a')
+    sound: require('../assets/audio/4_a.m4a')
   },
   {
     name: 'five',
-    sound: require('../assets/audio/5_a.m4a')
+    sound: require('../assets/audio/5_b.m4a')
   },
   {
     name: 'six',
     sound: require('../assets/audio/6_c.m4a')
+  },
+  {
+    name: 'seven',
+    sound: require('../assets/audio/7_e.m4a')
+  },
+  {
+    name: 'eight',
+    sound: require('../assets/audio/8_b.m4a')
   }
 ]
 
@@ -82,15 +90,19 @@ export class Chimes extends React.Component {
     return <View style={styles.chimesView}>
       <View style={styles.side}>
         <Button onPress={this.play.bind(this, 'one')} title='1' />
-        <Button onPress={this.play.bind(this, 'six')} title='6' />
+        <Button onPress={this.play.bind(this, 'eight')} title='8' />
       </View>
       <View style={styles.middle}>
         <Button onPress={this.play.bind(this, 'two')} title='2' />
-        <Button onPress={this.play.bind(this, 'five')} title='5' />
+        <Button onPress={this.play.bind(this, 'seven')} title='7' />
+      </View>
+      <View style={styles.middle}>
+        <Button onPress={this.play.bind(this, 'three')} title='3' />
+        <Button onPress={this.play.bind(this, 'six')} title='6' />
       </View>
       <View style={styles.side}>
-        <Button onPress={this.play.bind(this, 'three')} title='3' />
         <Button onPress={this.play.bind(this, 'four')} title='4' />
+        <Button onPress={this.play.bind(this, 'five')} title='5' />
       </View>
     </View>
   }
@@ -111,12 +123,12 @@ const styles = StyleSheet.create({
     // textAlign: 'center'
   },
   side: {
-    height: 100,
+    height: 120,
     flexDirection: 'column',
     justifyContent: 'space-around'
   },
   middle: {
-    height: 200,
+    height: 330,
     flexDirection: 'column',
     justifyContent: 'space-around'
   }
