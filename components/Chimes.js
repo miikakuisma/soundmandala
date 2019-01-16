@@ -28,10 +28,6 @@ const chimes = [
   {
     name: 'six',
     sound: require('../assets/audio/6_c.m4a')
-  },
-  {
-    name: 'seven',
-    sound: require('../assets/audio/7_e.m4a')
   }
 ]
 
@@ -84,18 +80,17 @@ export class Chimes extends React.Component {
     console.log(chimes)
     const tapPads = chimes.map((chime, index) => <Button key={index} onPress={this.play.bind(this, chime)} title={chime.name} />)
     return <View style={styles.chimesView}>
-      <View>
+      <View style={styles.side}>
         <Button onPress={this.play.bind(this, 'one')} title='1' />
-        <Button onPress={this.play.bind(this, 'two')} title='2' />
+        <Button onPress={this.play.bind(this, 'six')} title='6' />
       </View>
-      <View>
-        <Button onPress={this.play.bind(this, 'three')} title='3' />
-        <Button onPress={this.play.bind(this, 'four')} title='4' />
+      <View style={styles.middle}>
+        <Button onPress={this.play.bind(this, 'two')} title='2' />
         <Button onPress={this.play.bind(this, 'five')} title='5' />
       </View>
-      <View>
-        <Button onPress={this.play.bind(this, 'six')} title='6' />
-        <Button onPress={this.play.bind(this, 'seven')} title='7' />
+      <View style={styles.side}>
+        <Button onPress={this.play.bind(this, 'three')} title='3' />
+        <Button onPress={this.play.bind(this, 'four')} title='4' />
       </View>
     </View>
   }
@@ -114,5 +109,15 @@ const styles = StyleSheet.create({
     fontSize: 84,
     alignItems: 'center',
     // textAlign: 'center'
+  },
+  side: {
+    height: 100,
+    flexDirection: 'column',
+    justifyContent: 'space-around'
+  },
+  middle: {
+    height: 200,
+    flexDirection: 'column',
+    justifyContent: 'space-around'
   }
 })
