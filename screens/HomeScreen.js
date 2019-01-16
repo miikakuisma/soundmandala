@@ -1,18 +1,20 @@
 import React from 'react'
 import {
+  Alert,
   Image,
+  ImageBackground,
   Platform,
   ScrollView,
+  Slider,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Alert
 } from 'react-native';
 import { WebBrowser, Notifications, Permissions } from 'expo'
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
-import { MonoText, BoldText } from '../components/StyledText'
+import { MonoText, RegularText, BoldText } from '../components/StyledText'
 import { BreakTimer } from '../components/BreakTimer'
 
 async function getiOSNotificationPermission () {
@@ -24,9 +26,19 @@ async function getiOSNotificationPermission () {
   }
 }
 
+let notificationID
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null
+  }
+
+  constructor (props) {
+    super(props)
+    this.state = {
+      pauseDuration: 1,
+      pauseActive: false
+    }
   }
 
   componentDidMount () {
@@ -43,7 +55,27 @@ export default class HomeScreen extends React.Component {
     })
   }
 
-  createNotification (seconds) {
+  startPause () {
+    this.setState({ pauseActive: true })
+    this.createNotification(this.state.pauseDuration)
+  }
+
+  cancelPause () {
+    this.setState({ pauseActive: false })
+    this.cancelNotification()
+  }
+
+  completedPause () {
+    this.setState({ pauseActive: false })
+    // this.props.navigation.push('Links')
+    this.props.navigation.navigate('Links')
+  }
+
+  updateDuration (value) {
+    this.setState({ pauseDuration: value })
+  }
+
+  createNotification (minutes) {
     const localNotification = {
       title: 'Pauseground',
       body: 'Time for little break?',
@@ -58,48 +90,57 @@ export default class HomeScreen extends React.Component {
       }
     }
     let sendAfter = Date.now()
-    sendAfter += seconds * 1000
+    sendAfter += minutes * 1000 * 60
 
     const schedulingOptions = { time: sendAfter }
     Notifications.scheduleLocalNotificationAsync(
       localNotification,
       schedulingOptions
-    )
+    ).then((response) => {
+      notificationID = response
+    })
 
     // Notifications.presentLocalNotificationAsync(localnotification)
+  }
+
+  cancelNotification () {
+    Notifications.cancelScheduledNotificationAsync(notificationID)
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <BoldText style={styles.logoText}>Pauseground</BoldText>
-            <TouchableOpacity onPress={this._handlePressLogo}>
-              <Image
-                source={require('../assets/images/logo.png')}
-                style={styles.welcomeImage}
+        <ImageBackground source={require('../assets/images/background.jpg')} style={{width: '100%', height: '100%'}}>
+          <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+            <View style={styles.welcomeContainer}>
+              {/*<TouchableOpacity onPress={this._handlePressLogo}>
+                <Image
+                  source={require('../assets/images/logo.png')}
+                  style={styles.welcomeImage}
+                />
+              </TouchableOpacity>*/}
+              <BoldText style={styles.titleText}>Pause</BoldText>
+              <RegularText style={styles.duration}>{this.state.pauseDuration} minutes</RegularText>
+              <Slider
+                style={styles.slider}
+                disabled={this.state.pauseActive}
+                minimumValue={1}
+                maximumValue={5}
+                step={1}
+                onValueChange={this.updateDuration.bind(this)}
               />
-            </TouchableOpacity>
-            <BreakTimer
-              duration={10}
-              autorun={false}
-              onStart={this.createNotification}
-              onCompleted={this._handlePressLogo}
-            />
-          </View>
-
-          <View>
-          </View>
-
-        </ScrollView>
+              <BreakTimer
+                duration={this.state.pauseDuration}
+                autorun={false}
+                onStart={this.startPause.bind(this)}
+                onCancel={this.cancelPause.bind(this)}
+                onCompleted={this.completedPause.bind(this)}
+              />
+            </View>
+          </ScrollView>
+        </ImageBackground>
       </View>
     );
-  }
-
-  _handlePressLogo = () => {
-    // this.props.navigation.push('Links')
-    this.props.navigation.navigate('Links')
   }
 
   _handleHelpPress = () => {
@@ -112,10 +153,9 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.blue
   },
-  logoText: {
-    color: Colors.white,
+  titleText: {
+    color: Colors.black,
     fontSize: 32,
     textAlign: 'center'
   },
@@ -124,7 +164,7 @@ const styles = StyleSheet.create({
   },
   welcomeContainer: {
     position: 'absolute',
-    top: Layout.window.height / 3,
+    top: Layout.window.height / 2,
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -137,6 +177,12 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginTop: 3,
     marginLeft: -10,
+  },
+  duration: {
+    color: Colors.black
+  },
+  slider: {
+    width: '80%'
   },
   // codeHighlightContainer: {
   //   backgroundColor: 'rgba(0,0,0,0.05)',
