@@ -6,36 +6,100 @@ import Layout from '../constants/Layout'
 
 const chimes = [
   {
-    name: 'one',
+    name: 'one_a',
     sound: require('../assets/audio/1_a.m4a')
   },
   {
-    name: 'two',
+    name: 'one_ab',
+    sound: require('../assets/audio/1_ab.m4a')
+  },
+  {
+    name: 'one_ac',
+    sound: require('../assets/audio/1_ac.m4a')
+  },
+  {
+    name: 'two_c',
     sound: require('../assets/audio/2_c.m4a')
   },
   {
-    name: 'three',
+    name: 'two_ca',
+    sound: require('../assets/audio/2_ca.m4a')
+  },
+  {
+    name: 'two_ce',
+    sound: require('../assets/audio/2_ce.m4a')
+  },
+  {
+    name: 'three_e',
     sound: require('../assets/audio/3_e.m4a')
   },
   {
-    name: 'four',
+    name: 'three_ea',
+    sound: require('../assets/audio/3_ea.m4a')
+  },
+  {
+    name: 'three_ec',
+    sound: require('../assets/audio/3_ec.m4a')
+  },
+  {
+    name: 'four_a',
     sound: require('../assets/audio/4_a.m4a')
   },
   {
-    name: 'five',
+    name: 'four_ab',
+    sound: require('../assets/audio/4_ab.m4a')
+  },
+  {
+    name: 'four_ae',
+    sound: require('../assets/audio/4_ae.m4a')
+  },
+  {
+    name: 'five_b',
     sound: require('../assets/audio/5_b.m4a')
   },
   {
-    name: 'six',
+    name: 'five_ba',
+    sound: require('../assets/audio/5_ba.m4a')
+  },
+  {
+    name: 'five_bc',
+    sound: require('../assets/audio/5_bc.m4a')
+  },
+  {
+    name: 'six_c',
     sound: require('../assets/audio/6_c.m4a')
   },
   {
-    name: 'seven',
+    name: 'six_cb',
+    sound: require('../assets/audio/6_cb.m4a')
+  },
+  {
+    name: 'six_ce',
+    sound: require('../assets/audio/6_ce.m4a')
+  },
+  {
+    name: 'seven_e',
     sound: require('../assets/audio/7_e.m4a')
   },
   {
-    name: 'eight',
+    name: 'seven_eb',
+    sound: require('../assets/audio/7_eb.m4a')
+  },
+  {
+    name: 'seven_ec',
+    sound: require('../assets/audio/7_ec.m4a')
+  },
+  {
+    name: 'eight_b',
     sound: require('../assets/audio/8_b.m4a')
+  },
+  {
+    name: 'eight_ba',
+    sound: require('../assets/audio/8_ba.m4a')
+  },
+  {
+    name: 'eight_be',
+    sound: require('../assets/audio/8_be.m4a')
   }
 ]
 
@@ -84,15 +148,17 @@ let current = 0
 let last = 0
 
 export function playRandom () {
-  const skip = getRandom(0, 1) === 1
-  current = current + getRandom(1, 3, true)
+  current = current + getRandom(1, 6, true)
   const randomDelay = getRandom(50, 950, true)
   setTimeout(() => {
-    if (current <= 6 && current !== last && !skip) {
-      audio[chimes[current].name]()
-      last = current
-    } else {
-      current = 0
+    const skip = getRandom(0, 1) === 1
+    if (!skip) {
+      if (current <= 23 && current !== last) {
+        audio[chimes[current].name]()
+        last = current
+      } else {
+        current = 0
+      }
     }
   }, randomDelay)
 }

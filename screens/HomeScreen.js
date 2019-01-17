@@ -55,7 +55,7 @@ export default class HomeScreen extends React.Component {
   }
 
   completedPause () {
-    play('eight')
+    play('eight_be')
     this.setState({ pauseActive: false })
     // this.props.navigation.push('Links')
     // this.props.navigation.navigate('Links')
@@ -72,12 +72,13 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
+    const percentLeft = Math.floor(100/(this.state.pauseDuration * 60) * this.state.timerValue)
     return (
       <View style={styles.container}>
         <ImageBackground source={require('../assets/images/background.jpg')} style={{width: '100%', height: '100%'}}>
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View styles={styles.timerView}>
-              <Text style={styles.timeLeft}>{this.state.timerValue}</Text>
+              <Text style={styles.timeLeft}>{percentLeft}</Text>
             </View>
             <View style={styles.welcomeContainer}>
               {/*<TouchableOpacity onPress={this._handlePressLogo}>
@@ -86,8 +87,8 @@ export default class HomeScreen extends React.Component {
                   style={styles.welcomeImage}
                 />
               </TouchableOpacity>*/}
-              <BoldText style={styles.titleText}>Pause</BoldText>
-              <RegularText style={styles.duration}>{this.state.pauseDuration} minutes</RegularText>
+              <RegularText style={styles.duration}>Pause Duration</RegularText>
+              <BoldText style={styles.titleText}>{this.state.pauseDuration} minutes</BoldText>
               <Slider
                 style={styles.slider}
                 disabled={this.state.pauseActive}
