@@ -72,13 +72,16 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-    const percentLeft = 100 - Math.floor(100/(this.state.pauseDuration * 60) * this.state.timerValue)
+    // const percentLeft = 100 - Math.floor(100/(this.state.pauseDuration * 60) * this.state.timerValue)
+    var date = new Date(null)
+    date.setSeconds(this.state.timerValue)
+    const timeLeft = date.toISOString().substr(11, 8)
     return (
       <View style={styles.container}>
         <ImageBackground source={require('../assets/images/background.jpg')} style={{width: '100%', height: '100%'}}>
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View styles={styles.timerView}>
-              <Text style={styles.timeLeft}>{percentLeft !== 100 ? percentLeft + '%' : null}</Text>
+              <Text style={styles.timeLeft}></Text>
             </View>
             <View style={styles.timerContainer}>
               {/*<TouchableOpacity onPress={this._handlePressLogo}>
@@ -87,8 +90,12 @@ export default class HomeScreen extends React.Component {
                   style={styles.welcomeImage}
                 />
               </TouchableOpacity>*/}
-              <RegularText style={styles.duration}>Pause Duration</RegularText>
-              <BoldText style={styles.titleText}>{this.state.pauseDuration} minutes</BoldText>
+              <RegularText style={styles.duration}>
+                {this.state.pauseActive ? 'Time left' : 'Pause Duration'}
+              </RegularText>
+              <BoldText style={styles.titleText}>
+                 {this.state.pauseActive ? timeLeft : this.state.pauseDuration + ' minutes'}
+              </BoldText>
               <Slider
                 style={styles.slider}
                 disabled={this.state.pauseActive}

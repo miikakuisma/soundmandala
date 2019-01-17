@@ -146,24 +146,39 @@ function getRandom (min, max, rounded) {
 
 let current = 0
 let last = 0
-let playStyle = 'descending'
+let cycles = 0
+
+let playStyle = 'descending' // ascending | descending | random
+let howManyCycles = 4 // how many cycles until direction changes
+let wind = 28 // 0 - 100 (0 = no skipping at all, 100 = skip all)
+let speed = 10 // how much to ascend or descent at one step
 
 export function playRandom () {
-  const skip = getRandom(0, 100) < 30
+  const skip = getRandom(0, 100) < wind
   if (skip) {
     return
   }
   switch (playStyle) {
     case 'ascending':
-      current = current + getRandom(1, 5, true)
+      current = current + getRandom(1, speed, true)
       if (current > 23) {
         current = 0
+        cycles++
+        if (cycles === howManyCycles) {
+          playStyle = 'descending'
+          cycles = 0
+        }
       }
       break
     case 'descending':
-      current = current - getRandom(1, 5, true)
+      current = current - getRandom(1, speed, true)
       if (current < 0) {
         current = 23
+        cycles++
+        if (cycles === howManyCycles) {
+          playStyle = 'ascending'
+          cycles = 0
+        }
       }
       break
     case 'random':
