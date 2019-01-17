@@ -10,23 +10,19 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
-import { WebBrowser, Notifications, Permissions } from 'expo'
+} from 'react-native'
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
-import { MonoText, RegularText, BoldText } from '../components/StyledText'
+import {
+  getiOSNotificationPermission,
+  listenForNotifications,
+  createNotification,
+  cancelNotification
+} from '../components/Notifications'
+import { setupAudio, play, playRandom } from '../components/Chimes'
+import { Haptic, WebBrowser } from 'expo'
+import { RegularText, BoldText } from '../components/StyledText'
 import { BreakTimer } from '../components/BreakTimer'
-
-async function getiOSNotificationPermission () {
-  const { status } = await Permissions.getAsync(
-    Permissions.NOTIFICATIONS
-  )
-  if (status !== 'granted') {
-    await Permissions.askAsync(Permissions.NOTIFICATIONS)
-  }
-}
-
-let notificationID
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -44,70 +40,35 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount () {
     getiOSNotificationPermission()
-    this.listenForNotifications()
-  }
-
-  listenForNotifications () {
-    Notifications.addListener(notification => {
-      if (notification.origin === 'received' && Platform.OS === 'ios') {
-        // Alert.alert('Notification was triggered')
-        // console.log(notification)
-      }
-    })
+    listenForNotifications()
+    setupAudio()
   }
 
   startPause () {
     this.setState({ pauseActive: true })
-    this.createNotification(this.state.pauseDuration)
+    createNotification(this.state.pauseDuration)
   }
 
   cancelPause () {
     this.setState({ pauseActive: false })
-    this.cancelNotification()
+    cancelNotification()
   }
 
   completedPause () {
+    play('eight')
     this.setState({ pauseActive: false })
     // this.props.navigation.push('Links')
-    this.props.navigation.navigate('Links')
+    // this.props.navigation.navigate('Links')
   }
 
   updateDuration (value) {
     this.setState({ pauseDuration: value })
+    Haptic.selection()
   }
 
   onTimerUpdate (value) {
     this.setState({ timerValue: value })
-  }
-
-  createNotification (minutes) {
-    const localNotification = {
-      title: 'Pauseground',
-      body: 'Time for little break?',
-      data: {
-        somekey: 'some value'
-      },
-      android: {
-        sound: true
-      },
-      ios: {
-        sound: true
-      }
-    }
-    let sendAfter = Date.now()
-    sendAfter += minutes * 1000 * 60
-
-    const schedulingOptions = { time: sendAfter }
-    Notifications.scheduleLocalNotificationAsync(
-      localNotification,
-      schedulingOptions
-    ).then((response) => {
-      notificationID = response
-    })
-  }
-
-  cancelNotification () {
-    Notifications.cancelScheduledNotificationAsync(notificationID)
+    playRandom()
   }
 
   render() {
@@ -131,7 +92,7 @@ export default class HomeScreen extends React.Component {
                 style={styles.slider}
                 disabled={this.state.pauseActive}
                 minimumValue={1}
-                maximumValue={5}
+                maximumValue={20}
                 step={1}
                 onValueChange={this.updateDuration.bind(this)}
               />

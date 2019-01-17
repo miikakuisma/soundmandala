@@ -68,7 +68,7 @@ export class BreakTimer extends React.Component {
     this.setState({ running: true })
     this.timer = setInterval(() => {
       if (this.state.timerValue > 1) {
-        this.setState({ timerValue: this.state.timerValue = this.state.timerValue - 1 })
+        this.setState({ timerValue: this.state.timerValue = this.state.timerValue > 1 ? this.state.timerValue - 1 : 0 })
       } else {
         this.sessionCompeleted()
       }
@@ -83,7 +83,11 @@ export class BreakTimer extends React.Component {
 
   sessionCompeleted () {
     clearInterval(this.timer)
-    this.setState({ running: false, completed: true })
+    this.setState({
+      running: false,
+      completed: true,
+      timerValue: null
+    })
     if (this.props.onCompleted) {
       this.props.onCompleted()
     }
@@ -95,10 +99,7 @@ export class BreakTimer extends React.Component {
         <Button onPress={this.handleCancel.bind(this)} title='Cancel' />
       </View>
     }
-    if (this.state.completed) {
-      return <Button onPress={this.handleStart.bind(this)} title='Start Over' />
-    }
-    if (!this.state.running && !this.state.completed) {
+    if (!this.state.running && !this.state.completed || this.state.completed) {
       return <Button onPress={this.handleStart.bind(this)} title='Start' />
     }
   }

@@ -39,6 +39,64 @@ const chimes = [
   }
 ]
 
+let audio = {}
+
+export async function setupAudio () {
+  Audio.setAudioModeAsync({
+    allowsRecordingIOS: false,
+    interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+    playsInSilentModeIOS: true,
+    shouldDuckAndroid: true,
+    playThroughEarpieceAndroid: true,
+    interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX
+  })
+
+  chimes.map(async chime => {
+    const { sound } = await Audio.Sound.createAsync(chime.sound)
+    await sound.setStatusAsync({
+      volume: getRandom(0.5, 1)
+    })
+    audio[chime.name] = async () => {
+      try {
+        await sound.setPositionAsync(0)
+        await sound.playAsync()
+      } catch (error) {
+        console.warn('sound error', { error })
+        // An error occurred!
+      }
+    }
+  })
+}
+
+export function play (name) {
+  audio[name]()
+}
+
+function getRandom (min, max, rounded) {
+  if (rounded) {
+    return Math.round(min + Math.random() * (max - min))
+  } else {
+    return min + Math.random() * (max - min)
+  }
+}
+
+let current = 0
+let last = 0
+
+export function playRandom () {
+  const skip = getRandom(0, 1) === 1
+  current = current + getRandom(1, 3, true)
+  const randomDelay = getRandom(50, 950, true)
+  setTimeout(() => {
+    if (current <= 6 && current !== last && !skip) {
+      audio[chimes[current].name]()
+      last = current
+    } else {
+      current = 0
+    }
+  }, randomDelay)
+}
+
 export class Chimes extends React.Component {
   constructor (props) {
     super(props)
@@ -48,61 +106,26 @@ export class Chimes extends React.Component {
   }
 
   componentDidMount () {
-    this.setupAudio()
-  }
-
-  setupAudio = async () => {
-
-    Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
-      playThroughEarpieceAndroid: true,
-      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX
-    })
-
-    this.audio = {}
-    chimes.map(async chime => {
-      const { sound } = await Audio.Sound.createAsync(chime.sound)
-      await sound.setStatusAsync({
-        volume: 1
-      })
-      this.audio[chime.name] = async () => {
-        try {
-          await sound.setPositionAsync(0)
-          await sound.playAsync()
-        } catch (error) {
-          console.warn("sound error", { error })
-          // An error occurred!
-        }
-      }
-    })
-  }
-
-  play (name) {
-    this.audio[name]()
+    setupAudio()
   }
 
   render () {
-    console.log(chimes)
-    const tapPads = chimes.map((chime, index) => <Button key={index} onPress={this.play.bind(this, chime)} title={chime.name} />)
     return <View style={styles.chimesView}>
       <View style={styles.side}>
-        <Button onPress={this.play.bind(this, 'one')} title='1' />
-        <Button onPress={this.play.bind(this, 'eight')} title='8' />
+        <Button onPress={play.bind(this, 'one')} title='1' />
+        <Button onPress={play.bind(this, 'eight')} title='8' />
       </View>
       <View style={styles.middle}>
-        <Button onPress={this.play.bind(this, 'two')} title='2' />
-        <Button onPress={this.play.bind(this, 'seven')} title='7' />
+        <Button onPress={play.bind(this, 'two')} title='2' />
+        <Button onPress={play.bind(this, 'seven')} title='7' />
       </View>
       <View style={styles.middle}>
-        <Button onPress={this.play.bind(this, 'three')} title='3' />
-        <Button onPress={this.play.bind(this, 'six')} title='6' />
+        <Button onPress={play.bind(this, 'three')} title='3' />
+        <Button onPress={play.bind(this, 'six')} title='6' />
       </View>
       <View style={styles.side}>
-        <Button onPress={this.play.bind(this, 'four')} title='4' />
-        <Button onPress={this.play.bind(this, 'five')} title='5' />
+        <Button onPress={play.bind(this, 'four')} title='4' />
+        <Button onPress={play.bind(this, 'five')} title='5' />
       </View>
     </View>
   }
@@ -119,7 +142,7 @@ const styles = StyleSheet.create({
     height: Layout.window.height / 2,
     paddingTop: '50%',
     fontSize: 84,
-    alignItems: 'center',
+    alignItems: 'center'
     // textAlign: 'center'
   },
   side: {
