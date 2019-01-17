@@ -72,15 +72,15 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-    const percentLeft = Math.floor(100/(this.state.pauseDuration * 60) * this.state.timerValue)
+    const percentLeft = 100 - Math.floor(100/(this.state.pauseDuration * 60) * this.state.timerValue)
     return (
       <View style={styles.container}>
         <ImageBackground source={require('../assets/images/background.jpg')} style={{width: '100%', height: '100%'}}>
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View styles={styles.timerView}>
-              <Text style={styles.timeLeft}>{percentLeft}</Text>
+              <Text style={styles.timeLeft}>{percentLeft !== 100 ? percentLeft + '%' : null}</Text>
             </View>
-            <View style={styles.welcomeContainer}>
+            <View style={styles.timerContainer}>
               {/*<TouchableOpacity onPress={this._handlePressLogo}>
                 <Image
                   source={require('../assets/images/logo.png')}
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'center'
   },
-  welcomeContainer: {
+  timerContainer: {
     height: (Layout.window.height / 2) - 80,
     paddingTop: '20%',
     alignItems: 'center'
@@ -159,44 +159,5 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: '80%'
-  },
-  // codeHighlightContainer: {
-  //   backgroundColor: 'rgba(0,0,0,0.05)',
-  //   borderRadius: 3,
-  //   paddingHorizontal: 4,
-  // },
-  // getStartedText: {
-  //   fontSize: 17,
-  //   color: 'rgba(96,100,109, 1)',
-  //   lineHeight: 24,
-  //   textAlign: 'center',
-  // },
-  // tabBarInfoContainer: {
-  //   position: 'absolute',
-  //   bottom: 0,
-  //   left: 0,
-  //   right: 0,
-  //   ...Platform.select({
-  //     ios: {
-  //       shadowColor: 'black',
-  //       shadowOffset: { height: -3 },
-  //       shadowOpacity: 0.1,
-  //       shadowRadius: 3,
-  //     },
-  //     android: {
-  //       elevation: 20,
-  //     },
-  //   }),
-  //   alignItems: 'center',
-  //   backgroundColor: '#fbfbfb',
-  //   paddingVertical: 20,
-  // },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
   }
 })

@@ -146,21 +146,37 @@ function getRandom (min, max, rounded) {
 
 let current = 0
 let last = 0
+let playStyle = 'descending'
 
 export function playRandom () {
-  current = current + getRandom(1, 6, true)
-  const randomDelay = getRandom(50, 950, true)
-  setTimeout(() => {
-    const skip = getRandom(0, 1) === 1
-    if (!skip) {
-      if (current <= 23 && current !== last) {
-        audio[chimes[current].name]()
-        last = current
-      } else {
+  const skip = getRandom(0, 100) < 30
+  if (skip) {
+    return
+  }
+  switch (playStyle) {
+    case 'ascending':
+      current = current + getRandom(1, 5, true)
+      if (current > 23) {
         current = 0
       }
-    }
-  }, randomDelay)
+      break
+    case 'descending':
+      current = current - getRandom(1, 5, true)
+      if (current < 0) {
+        current = 23
+      }
+      break
+    case 'random':
+      current = getRandom(1, 23, true)
+      break
+  }
+  if (!skip && current !== last) {
+    const randomDelay = getRandom(50, 950, true)
+    setTimeout(() => {
+      audio[chimes[current].name]()
+      last = current
+    }, randomDelay)
+  }
 }
 
 export class Chimes extends React.Component {
