@@ -148,10 +148,11 @@ let current = 0
 let last = 0
 let cycles = 0
 
-let playStyle = 'descending' // ascending | descending | random
-let howManyCycles = 4 // how many cycles until direction changes
-let wind = 28 // 0 - 100 (0 = no skipping at all, 100 = skip all)
-let speed = 10 // how much to ascend or descent at one step
+let playStyle = 'ascending' // ascending | descending | random
+let randomness = true
+let howManyCycles = 2 // how many cycles until direction changes
+let wind = 30 // 0 - 100 (0 = no skipping at all, 100 = skip all)
+let speed = 7 // how much to ascend or descent at one step
 
 export function playRandom () {
   const skip = getRandom(0, 100) < wind
@@ -160,7 +161,7 @@ export function playRandom () {
   }
   switch (playStyle) {
     case 'ascending':
-      current = current + getRandom(1, speed, true)
+      current = current + randomness ? getRandom(1, speed, true) : speed
       if (current > 23) {
         current = 0
         cycles++
@@ -171,7 +172,7 @@ export function playRandom () {
       }
       break
     case 'descending':
-      current = current - getRandom(1, speed, true)
+      current = current - randomness ? getRandom(1, speed, true) : speed
       if (current < 0) {
         current = 23
         cycles++
@@ -186,11 +187,29 @@ export function playRandom () {
       break
   }
   if (!skip && current !== last) {
-    const randomDelay = getRandom(50, 950, true)
+    // Play with style
     setTimeout(() => {
       audio[chimes[current].name]()
       last = current
-    }, randomDelay)
+    }, getRandom(10, 900, true))
+    // and one random too
+    if (getRandom(0, 100) < wind) {
+      setTimeout(() => {
+        let more = getRandom(0, 11, true)
+        if (more !== last) {
+          audio[chimes[more].name]()
+        }
+      }, getRandom(300, 600, true))
+    }
+    // third one!
+    if (getRandom(0, 100) < wind) {
+      setTimeout(() => {
+        let more = getRandom(11, 20, true)
+        if (more !== last) {
+          audio[chimes[more].name]()
+        }
+      }, getRandom(600, 900, true))
+    }
   }
 }
 
@@ -240,7 +259,6 @@ const styles = StyleSheet.create({
     paddingTop: '50%',
     fontSize: 84,
     alignItems: 'center'
-    // textAlign: 'center'
   },
   side: {
     height: 120,
