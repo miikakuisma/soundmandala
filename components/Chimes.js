@@ -118,7 +118,7 @@ export async function setupAudio () {
   chimes.map(async chime => {
     const { sound } = await Audio.Sound.createAsync(chime.sound)
     await sound.setStatusAsync({
-      volume: getRandom(0.5, 1)
+      volume: 1
     })
     audio[chime.name] = async () => {
       try {
@@ -144,72 +144,44 @@ function getRandom (min, max, rounded) {
   }
 }
 
-let current = 0
-let last = 0
-let cycles = 0
+let wind = 70 // 10 - 100
+let offset = 0
 
-let playStyle = 'ascending' // ascending | descending | random
-let randomness = true
-let howManyCycles = 2 // how many cycles until direction changes
-let wind = 30 // 0 - 100 (0 = no skipping at all, 100 = skip all)
-let speed = 7 // how much to ascend or descent at one step
+// 0, 3, 6, 9, 12, 15, 18, 21
+let sequence = [0, 6, 9, 0, 6, 9, 12, 15, 12, 9, 6, 3, 0, 6, 9, 15, 9, 12, 6, 9, 6, 9, 3, 6, 3, 6, 0, 3, 0, 3, 6, 9, 12, 15, 18, 21, 18, 21, 18, 15, 18, 21, 15, 9, 6, 12, 9, 6, 3, 9, 6, 3, 6, 3, 0, 3, 6, 9]
+
+export function playSequence () {
+  if (getRandom(30, 100) < wind) {
+    triplay(sequence[offset])
+    offset++
+    if (offset === sequence.length) {
+      offset = 0
+    }
+  }
+}
 
 export function playRandom () {
-  const skip = getRandom(0, 100) < wind
-  if (skip) {
-    return
+  if (getRandom(0, 100) < wind) {
+    triplay(sequence[getRandom(0, sequence.length, true)])
   }
-  switch (playStyle) {
-    case 'ascending':
-      current = current + randomness ? getRandom(1, speed, true) : speed
-      if (current > 23) {
-        current = 0
-        cycles++
-        if (cycles === howManyCycles) {
-          playStyle = 'descending'
-          cycles = 0
-        }
-      }
-      break
-    case 'descending':
-      current = current - randomness ? getRandom(1, speed, true) : speed
-      if (current < 0) {
-        current = 23
-        cycles++
-        if (cycles === howManyCycles) {
-          playStyle = 'ascending'
-          cycles = 0
-        }
-      }
-      break
-    case 'random':
-      current = getRandom(1, 23, true)
-      break
-  }
-  if (!skip && current !== last) {
-    // Play with style
+}
+
+function triplay (number) {
+  // Main string
+  setTimeout(() => {
+    audio[chimes[number].name]()
+  }, getRandom(10, 500, true))
+  if (getRandom(50, 100) < wind) {
+    // Second
     setTimeout(() => {
-      audio[chimes[current].name]()
-      last = current
-    }, getRandom(10, 900, true))
-    // and one random too
-    if (getRandom(0, 100) < wind) {
-      setTimeout(() => {
-        let more = getRandom(0, 11, true)
-        if (more !== last) {
-          audio[chimes[more].name]()
-        }
-      }, getRandom(300, 600, true))
-    }
-    // third one!
-    if (getRandom(0, 100) < wind) {
-      setTimeout(() => {
-        let more = getRandom(11, 20, true)
-        if (more !== last) {
-          audio[chimes[more].name]()
-        }
-      }, getRandom(600, 900, true))
-    }
+      audio[chimes[number + 1].name]()
+    }, getRandom(300, 900, true))
+  }
+  if (getRandom(30, 100) < wind) {
+    // Third
+    setTimeout(() => {
+      audio[chimes[number + 2].name]()
+    }, getRandom(600, 900, true))
   }
 }
 
@@ -228,20 +200,20 @@ export class Chimes extends React.Component {
   render () {
     return <View style={styles.chimesView}>
       <View style={styles.side}>
-        <Button onPress={play.bind(this, 'one')} title='1' />
-        <Button onPress={play.bind(this, 'eight')} title='8' />
+        <Button onPress={triplay.bind(this, 0)} title='1' />
+        <Button onPress={triplay.bind(this, 21)} title='8' />
       </View>
       <View style={styles.middle}>
-        <Button onPress={play.bind(this, 'two')} title='2' />
-        <Button onPress={play.bind(this, 'seven')} title='7' />
+        <Button onPress={triplay.bind(this, 3)} title='2' />
+        <Button onPress={triplay.bind(this, 18)} title='7' />
       </View>
       <View style={styles.middle}>
-        <Button onPress={play.bind(this, 'three')} title='3' />
-        <Button onPress={play.bind(this, 'six')} title='6' />
+        <Button onPress={triplay.bind(this, 6)} title='3' />
+        <Button onPress={triplay.bind(this, 15)} title='6' />
       </View>
       <View style={styles.side}>
-        <Button onPress={play.bind(this, 'four')} title='4' />
-        <Button onPress={play.bind(this, 'five')} title='5' />
+        <Button onPress={triplay.bind(this, 9)} title='4' />
+        <Button onPress={triplay.bind(this, 12)} title='5' />
       </View>
     </View>
   }
