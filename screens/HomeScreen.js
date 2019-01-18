@@ -21,7 +21,7 @@ import {
   cancelNotification
 } from '../components/Notifications'
 import { setupAudio, play, playRandom, playSequence } from '../components/Chimes'
-import { Haptic, WebBrowser } from 'expo'
+import { LinearGradient, Haptic, WebBrowser } from 'expo'
 import { RegularText, BoldText } from '../components/StyledText'
 import { BreakTimer } from '../components/BreakTimer'
 
@@ -82,7 +82,7 @@ export default class HomeScreen extends React.Component {
     // const percentLeft = 100 - Math.floor(100/(this.state.pauseDuration * 60) * this.state.timerValue)
     return (
       <View style={styles.container}>
-        <ImageBackground source={require('../assets/images/background.jpg')} style={{width: '100%', height: '100%'}}>
+        <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View styles={styles.timerView}>
               <Text style={styles.timeLeft}></Text>
@@ -91,6 +91,7 @@ export default class HomeScreen extends React.Component {
                 source={require('../assets/webaudio/chimes.html')}
                 mediaPlaybackRequiresUserAction={false}
                 javaScriptEnabled={true}
+
               />
             </View>
             <View style={styles.timerContainer}>
@@ -124,7 +125,7 @@ export default class HomeScreen extends React.Component {
               />
             </View>
           </ScrollView>
-        </ImageBackground>
+        </LinearGradient>
       </View>
     );
   }
