@@ -1,29 +1,15 @@
 import React from 'react'
-import {
-  Alert,
-  Image,
-  ImageBackground,
-  Platform,
-  ScrollView,
-  Slider,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  WebView
-} from 'react-native'
+import { ScrollView, Slider, StyleSheet, Text, View, WebView } from 'react-native'
+import { LinearGradient, Haptic, WebBrowser } from 'expo'
+
+import { getiOSNotificationPermission, listenForNotifications, createNotification, cancelNotification } from '../components/Notifications'
+
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
-import {
-  getiOSNotificationPermission,
-  listenForNotifications,
-  createNotification,
-  cancelNotification
-} from '../components/Notifications'
-import { setupAudio, play, playRandom, playSequence } from '../components/Chimes'
-import { LinearGradient, Haptic, WebBrowser } from 'expo'
 import { RegularText, BoldText } from '../components/StyledText'
+
 import { BreakTimer } from '../components/BreakTimer'
+import { Chimes, playSequence } from '../components/Chimes'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -42,7 +28,6 @@ export default class HomeScreen extends React.Component {
   componentDidMount () {
     getiOSNotificationPermission()
     listenForNotifications()
-    setupAudio()
   }
 
   startPause () {
@@ -56,10 +41,7 @@ export default class HomeScreen extends React.Component {
   }
 
   completedPause () {
-    play(23)
     this.setState({ pauseActive: false })
-    // this.props.navigation.push('Links')
-    // this.props.navigation.navigate('Links')
   }
 
   updateDuration (value) {
@@ -69,10 +51,7 @@ export default class HomeScreen extends React.Component {
 
   onTimerUpdate (value) {
     this.setState({ timerValue: value })
-    // Play with Expo
     playSequence()
-    // Play with Web Audio API
-    // this.webViewRef.postMessage('PLAY_SEQUENCE')
   }
 
   render() {
@@ -85,22 +64,9 @@ export default class HomeScreen extends React.Component {
         <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View styles={styles.timerView}>
-              <Text style={styles.timeLeft}></Text>
-              {/*<WebView
-                ref={(ref) => { this.webViewRef = ref }}
-                source={require('../assets/webaudio/chimes.html')}
-                mediaPlaybackRequiresUserAction={false}
-                javaScriptEnabled={true}
-                allowUniversalAccessFromFileURLs={true}
-              />*/}
+              <Chimes />
             </View>
             <View style={styles.timerContainer}>
-              {/*<TouchableOpacity onPress={this._handlePressLogo}>
-                <Image
-                  source={require('../assets/images/logo.png')}
-                  style={styles.welcomeImage}
-                />
-              </TouchableOpacity>*/}
               <RegularText style={styles.duration}>
                 {this.state.pauseActive ? 'Time left' : 'Pause Duration'}
               </RegularText>
@@ -129,12 +95,6 @@ export default class HomeScreen extends React.Component {
       </View>
     );
   }
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    )
-  }
 }
 
 const styles = StyleSheet.create({
@@ -152,25 +112,10 @@ const styles = StyleSheet.create({
   timerView: {
     flex: 1
   },
-  timeLeft: {
-    color: Colors.white,
-    height: Layout.window.height / 2,
-    paddingTop: '50%',
-    fontSize: 84,
-    alignItems: 'center',
-    textAlign: 'center'
-  },
   timerContainer: {
     height: (Layout.window.height / 2) - 80,
     paddingTop: '20%',
     alignItems: 'center'
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
   },
   duration: {
     color: Colors.black
