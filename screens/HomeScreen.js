@@ -89,6 +89,8 @@ export default class HomeScreen extends React.Component {
               <WebView
                 ref={(ref) => { this.webViewRef = ref }}
                 source={require('../assets/webaudio/chimes.html')}
+                mediaPlaybackRequiresUserAction={false}
+                javaScriptEnabled={true}
               />
             </View>
             <View style={styles.timerContainer}>
