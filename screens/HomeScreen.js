@@ -64,7 +64,7 @@ export default class HomeScreen extends React.Component {
         <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View styles={styles.timerView}>
-              <KeepAwake />
+              { this.state.pauseActive ? <KeepAwake /> : null }
               <Chimes />
             </View>
             <View style={styles.timerContainer}>
