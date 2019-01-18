@@ -20,7 +20,7 @@ import {
   createNotification,
   cancelNotification
 } from '../components/Notifications'
-import { setupAudio, play, playRandom, playSequence } from '../components/Chimes'
+// import { setupAudio, play, playRandom, playSequence } from '../components/Chimes'
 import { LinearGradient, Haptic, WebBrowser } from 'expo'
 import { RegularText, BoldText } from '../components/StyledText'
 import { BreakTimer } from '../components/BreakTimer'
@@ -42,7 +42,7 @@ export default class HomeScreen extends React.Component {
   componentDidMount () {
     getiOSNotificationPermission()
     listenForNotifications()
-    setupAudio()
+    // setupAudio()
   }
 
   startPause () {
