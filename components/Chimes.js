@@ -186,15 +186,8 @@ function triplay (number) {
 }
 
 export class Chimes extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-
-    }
-  }
-
   componentDidMount () {
-    setupAudio()
+    // setupAudio()
   }
 
   render () {

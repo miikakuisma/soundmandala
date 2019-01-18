@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8">
+  <title>WebAudio Player</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.0/babel.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.4/Pizzicato.min.js"></script>
+<script type="text/javascript">    
+const chimes = [
+  {
+    name: 'one_a',
+    url: '../audio/1_a.m4a'
+  },
+  {
+    name: 'one_ab',
+    url: '../audio/1_ab.m4a'
+  },
+  {
+    name: 'one_ac',
+    url: '../audio/1_ac.m4a'
+  },
+  {
+    name: 'two_c',
+    url: '../audio/2_c.m4a'
+  },
+  {
+    name: 'two_ca',
+    url: '../audio/2_ca.m4a'
+  },
+  {
+    name: 'two_ce',
+    url: '../audio/2_ce.m4a'
+  },
+  {
+    name: 'three_e',
+    url: '../audio/3_e.m4a'
+  },
+  {
+    name: 'three_ea',
+    url: '../audio/3_ea.m4a'
+  },
+  {
+    name: 'three_ec',
+    url: '../audio/3_ec.m4a'
+  },
+  {
+    name: 'four_a',
+    url: '../audio/4_a.m4a'
+  },
+  {
+    name: 'four_ab',
+    url: '../audio/4_ab.m4a'
+  },
+  {
+    name: 'four_ae',
+    url: '../audio/4_ae.m4a'
+  },
+  {
+    name: 'five_b',
+    url: '../audio/5_b.m4a'
+  },
+  {
+    name: 'five_ba',
+    url: '../audio/5_ba.m4a'
+  },
+  {
+    name: 'five_bc',
+    url: '../audio/5_bc.m4a'
+  },
+  {
+    name: 'six_c',
+    url: '../audio/6_c.m4a'
+  },
+  {
+    name: 'six_cb',
+    url: '../audio/6_cb.m4a'
+  },
+  {
+    name: 'six_ce',
+    url: '../audio/6_ce.m4a'
+  },
+  {
+    name: 'seven_e',
+    url: '../audio/7_e.m4a'
+  },
+  {
+    name: 'seven_eb',
+    url: '../audio/7_eb.m4a'
+  },
+  {
+    name: 'seven_ec',
+    url: '../audio/7_ec.m4a'
+  },
+  {
+    name: 'eight_b',
+    url: '../audio/8_b.m4a'
+  },
+  {
+    name: 'eight_ba',
+    url: '../audio/8_ba.m4a'
+  },
+  {
+    name: 'eight_be',
+    url: '../audio/8_be.m4a'
+  }
+]
+
+document.addEventListener('message', function (e) {
+  if (e.data === 'PLAY_SEQUENCE') {
+    playSequence()
+  }
+})
+
+let samples = []
+let group
+
+prepareSounds()
+
+function prepareSounds () {
+  // Create samples array from instruments
+  chimes.forEach(chime => {
+    samples.push({
+      id: chime.name,
+      url: chime.url,
+      sound: null,
+      preloaded: false
+    })
+  })
+  // Create Pizzicato group
+  group = new Pizzicato.Group()
+  // Preload samples into group
+  preloadSamples(samples, function () {
+    // When all done, add Reverb
+    // group.addEffect(new Pizzicato.Effects.Reverb({
+    //   time: 0.8,
+    //   decay: 3,
+    //   reverse: false,
+    //   mix: 0.8
+    // }))
+  })
+}
+
+function preloadSamples (samples, callback) {
+  // Preload samples and them into Pizzicato group
+  let sampleCounter = 0
+  samples.forEach(sample => {
+    sample.sound = new Pizzicato.Sound({
+      source: 'file',
+      options: {
+        path: sample.url,
+        volume: 1,
+        attack: 0.1,
+        release: 0.3
+      }
+    }, function () {
+      sampleCounter++
+      sample.preloaded = true
+      if (sampleCounter === samples.length - 1) {
+        callback()
+      }
+    })
+    // Add sample to its Pizzicato instrument group
+    group.addSound(sample.sound)
+  })
+}
+
+let wind = 70 // 10 - 100
+
+// 0, 3, 6, 9, 12, 15, 18, 21
+let sequence = [0, 6, 9, 0, 6, 9, 12, 15, 12, 9, 6, 3, 0, 6, 9, 15, 9, 12, 6, 9, 6, 9, 3, 6, 3, 6, 0, 3, 0, 3, 6, 9, 12, 15, 18, 21, 18, 21, 18, 15, 18, 21, 15, 9, 6, 12, 9, 6, 3, 9, 6, 3, 6, 3, 0, 3, 6, 9]
+
+function getRandom (min, max, rounded) {
+  if (rounded) {
+    return Math.round(min + Math.random() * (max - min))
+  } else {
+    return min + Math.random() * (max - min)
+  }
+}
+
+let offset = 0
+
+function playSequence () {
+  // Play next sound from the sequence, unless randomly skipping
+  if (getRandom(30, 100) < wind) {
+    triplay(sequence[offset])
+    offset++
+    if (offset === sequence.length) {
+      offset = 0
+    }
+  }
+}
+
+function triplay (number) {
+  // Main string
+  setTimeout(() => {
+    triggerSound(number)
+  }, getRandom(10, 500, true))
+  if (getRandom(50, 100) < wind) {
+    // Second
+    setTimeout(() => {
+      triggerSound(number + 1)
+    }, getRandom(300, 900, true))
+  }
+  if (getRandom(30, 100) < wind) {
+    // Third
+    setTimeout(() => {
+      triggerSound(number + 2)
+    }, getRandom(600, 900, true))
+  }
+}
+
+function triggerSound (sound) {
+  samples[sound].sound.stop()
+  samples[sound].sound.volume = getRandom(0.1, 1)
+  samples[sound].sound.play()
+}
+</script>
+</head>
+<body></body>
+</html>

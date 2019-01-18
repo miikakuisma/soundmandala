@@ -10,6 +10,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  WebView
 } from 'react-native'
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
@@ -68,20 +69,27 @@ export default class HomeScreen extends React.Component {
 
   onTimerUpdate (value) {
     this.setState({ timerValue: value })
-    playSequence()
+    // Play with Expo
+    // playSequence()
+    // Play with Web Audio API
+    this.webViewRef.postMessage('PLAY_SEQUENCE')
   }
 
   render() {
-    // const percentLeft = 100 - Math.floor(100/(this.state.pauseDuration * 60) * this.state.timerValue)
     var date = new Date(null)
     date.setSeconds(this.state.timerValue)
     const timeLeft = date.toISOString().substr(11, 8)
+    // const percentLeft = 100 - Math.floor(100/(this.state.pauseDuration * 60) * this.state.timerValue)
     return (
       <View style={styles.container}>
         <ImageBackground source={require('../assets/images/background.jpg')} style={{width: '100%', height: '100%'}}>
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View styles={styles.timerView}>
               <Text style={styles.timeLeft}></Text>
+              <WebView
+                ref={(ref) => { this.webViewRef = ref }}
+                source={require('../assets/webaudio/chimes.html')}
+              />
             </View>
             <View style={styles.timerContainer}>
               {/*<TouchableOpacity onPress={this._handlePressLogo}>
