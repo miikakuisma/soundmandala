@@ -116,24 +116,32 @@ export async function setupAudio () {
   })
 
   chimes.map(async chime => {
-    const { sound } = await Audio.Sound.createAsync(chime.sound)
-    await sound.setStatusAsync({
-      volume: 1
-    })
-    audio[chime.name] = async () => {
-      try {
-        await sound.setPositionAsync(0)
-        await sound.playAsync()
-      } catch (error) {
-        console.warn('sound error', { error })
-        // An error occurred!
-      }
+    chime.audioObject = new Audio.Sound()
+    try {
+      await chime.audioObject.loadAsync(chime.sound)
+      // await chime.audioObject.playAsync()
+      // Your sound is playing!
+    } catch (error) {
+      // An error occurred!
     }
+    // const { sound } = await Audio.Sound.createAsync(chime.sound)
+    // await sound.setStatusAsync({
+    //   volume: 1
+    // })
+    // audio[chime.name] = async () => {
+    //   try {
+    //     await sound.setPositionAsync(0)
+    //     await sound.playAsync()
+    //   } catch (error) {
+    //     console.warn('sound error', { error })
+    //     // An error occurred!
+    //   }
+    // }
   })
 }
 
-export function play (name) {
-  audio[name]()
+export function play (number) {
+  triggerSound(number)
 }
 
 function getRandom (min, max, rounded) {
@@ -169,20 +177,27 @@ export function playRandom () {
 function triplay (number) {
   // Main string
   setTimeout(() => {
-    audio[chimes[number].name]()
+    triggerSound(number)
   }, getRandom(10, 500, true))
   if (getRandom(50, 100) < wind) {
     // Second
     setTimeout(() => {
-      audio[chimes[number + 1].name]()
+      triggerSound(number + 1)
     }, getRandom(300, 900, true))
   }
   if (getRandom(30, 100) < wind) {
     // Third
     setTimeout(() => {
-      audio[chimes[number + 2].name]()
+      triggerSound(number + 2)
     }, getRandom(600, 900, true))
   }
+}
+
+async function triggerSound (sound) {
+  await chimes[sound].audioObject.setVolumeAsync(0)
+  await chimes[sound].audioObject.stopAsync()
+  await chimes[sound].audioObject.setVolumeAsync(getRandom(0.1, 1))
+  await chimes[sound].audioObject.playAsync()
 }
 
 export class Chimes extends React.Component {

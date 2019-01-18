@@ -130,6 +130,7 @@ function prepareSounds () {
   group = new Pizzicato.Group()
   // Preload samples into group
   preloadSamples(samples, function () {
+    triggerSound(0)
     // When all done, add Reverb
     // group.addEffect(new Pizzicato.Effects.Reverb({
     //   time: 0.8,

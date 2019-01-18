@@ -20,7 +20,7 @@ import {
   createNotification,
   cancelNotification
 } from '../components/Notifications'
-// import { setupAudio, play, playRandom, playSequence } from '../components/Chimes'
+import { setupAudio, play, playRandom, playSequence } from '../components/Chimes'
 import { LinearGradient, Haptic, WebBrowser } from 'expo'
 import { RegularText, BoldText } from '../components/StyledText'
 import { BreakTimer } from '../components/BreakTimer'
@@ -42,7 +42,7 @@ export default class HomeScreen extends React.Component {
   componentDidMount () {
     getiOSNotificationPermission()
     listenForNotifications()
-    // setupAudio()
+    setupAudio()
   }
 
   startPause () {
@@ -56,7 +56,7 @@ export default class HomeScreen extends React.Component {
   }
 
   completedPause () {
-    play('eight_be')
+    play(23)
     this.setState({ pauseActive: false })
     // this.props.navigation.push('Links')
     // this.props.navigation.navigate('Links')
@@ -70,9 +70,9 @@ export default class HomeScreen extends React.Component {
   onTimerUpdate (value) {
     this.setState({ timerValue: value })
     // Play with Expo
-    // playSequence()
+    playSequence()
     // Play with Web Audio API
-    this.webViewRef.postMessage('PLAY_SEQUENCE')
+    // this.webViewRef.postMessage('PLAY_SEQUENCE')
   }
 
   render() {
@@ -86,13 +86,13 @@ export default class HomeScreen extends React.Component {
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View styles={styles.timerView}>
               <Text style={styles.timeLeft}></Text>
-              <WebView
+              {/*<WebView
                 ref={(ref) => { this.webViewRef = ref }}
                 source={require('../assets/webaudio/chimes.html')}
                 mediaPlaybackRequiresUserAction={false}
                 javaScriptEnabled={true}
-
-              />
+                allowUniversalAccessFromFileURLs={true}
+              />*/}
             </View>
             <View style={styles.timerContainer}>
               {/*<TouchableOpacity onPress={this._handlePressLogo}>
