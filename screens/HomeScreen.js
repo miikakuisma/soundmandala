@@ -1,6 +1,6 @@
 import React from 'react'
 import { ScrollView, Slider, StyleSheet, Text, View, WebView } from 'react-native'
-import { LinearGradient, Haptic, WebBrowser } from 'expo'
+import { LinearGradient, Haptic, WebBrowser, KeepAwake } from 'expo'
 
 import { getiOSNotificationPermission, listenForNotifications, createNotification, cancelNotification } from '../components/Notifications'
 
@@ -64,6 +64,7 @@ export default class HomeScreen extends React.Component {
         <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View styles={styles.timerView}>
+              <KeepAwake />
               <Chimes />
             </View>
             <View style={styles.timerContainer}>
