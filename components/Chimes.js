@@ -7,103 +7,101 @@ import Layout from '../constants/Layout'
 const chimes = [
   {
     name: 'one_a',
-    sound: require('../assets/audio/1_a.m4a')
+    sound: require('../assets/audio/chimes/1_a.m4a')
   },
   {
     name: 'one_ab',
-    sound: require('../assets/audio/1_ab.m4a')
+    sound: require('../assets/audio/chimes/1_ab.m4a')
   },
   {
     name: 'one_ac',
-    sound: require('../assets/audio/1_ac.m4a')
+    sound: require('../assets/audio/chimes/1_ac.m4a')
   },
   {
     name: 'two_c',
-    sound: require('../assets/audio/2_c.m4a')
+    sound: require('../assets/audio/chimes/2_c.m4a')
   },
   {
     name: 'two_ca',
-    sound: require('../assets/audio/2_ca.m4a')
+    sound: require('../assets/audio/chimes/2_ca.m4a')
   },
   {
     name: 'two_ce',
-    sound: require('../assets/audio/2_ce.m4a')
+    sound: require('../assets/audio/chimes/2_ce.m4a')
   },
   {
     name: 'three_e',
-    sound: require('../assets/audio/3_e.m4a')
+    sound: require('../assets/audio/chimes/3_e.m4a')
   },
   {
     name: 'three_ea',
-    sound: require('../assets/audio/3_ea.m4a')
+    sound: require('../assets/audio/chimes/3_ea.m4a')
   },
   {
     name: 'three_ec',
-    sound: require('../assets/audio/3_ec.m4a')
+    sound: require('../assets/audio/chimes/3_ec.m4a')
   },
   {
     name: 'four_a',
-    sound: require('../assets/audio/4_a.m4a')
+    sound: require('../assets/audio/chimes/4_a.m4a')
   },
   {
     name: 'four_ab',
-    sound: require('../assets/audio/4_ab.m4a')
+    sound: require('../assets/audio/chimes/4_ab.m4a')
   },
   {
     name: 'four_ae',
-    sound: require('../assets/audio/4_ae.m4a')
+    sound: require('../assets/audio/chimes/4_ae.m4a')
   },
   {
     name: 'five_b',
-    sound: require('../assets/audio/5_b.m4a')
+    sound: require('../assets/audio/chimes/5_b.m4a')
   },
   {
     name: 'five_ba',
-    sound: require('../assets/audio/5_ba.m4a')
+    sound: require('../assets/audio/chimes/5_ba.m4a')
   },
   {
     name: 'five_bc',
-    sound: require('../assets/audio/5_bc.m4a')
+    sound: require('../assets/audio/chimes/5_bc.m4a')
   },
   {
     name: 'six_c',
-    sound: require('../assets/audio/6_c.m4a')
+    sound: require('../assets/audio/chimes/6_c.m4a')
   },
   {
     name: 'six_cb',
-    sound: require('../assets/audio/6_cb.m4a')
+    sound: require('../assets/audio/chimes/6_cb.m4a')
   },
   {
     name: 'six_ce',
-    sound: require('../assets/audio/6_ce.m4a')
+    sound: require('../assets/audio/chimes/6_ce.m4a')
   },
   {
     name: 'seven_e',
-    sound: require('../assets/audio/7_e.m4a')
+    sound: require('../assets/audio/chimes/7_e.m4a')
   },
   {
     name: 'seven_eb',
-    sound: require('../assets/audio/7_eb.m4a')
+    sound: require('../assets/audio/chimes/7_eb.m4a')
   },
   {
     name: 'seven_ec',
-    sound: require('../assets/audio/7_ec.m4a')
+    sound: require('../assets/audio/chimes/7_ec.m4a')
   },
   {
     name: 'eight_b',
-    sound: require('../assets/audio/8_b.m4a')
+    sound: require('../assets/audio/chimes/8_b.m4a')
   },
   {
     name: 'eight_ba',
-    sound: require('../assets/audio/8_ba.m4a')
+    sound: require('../assets/audio/chimes/8_ba.m4a')
   },
   {
     name: 'eight_be',
-    sound: require('../assets/audio/8_be.m4a')
+    sound: require('../assets/audio/chimes/8_be.m4a')
   }
 ]
-
-let audio = {}
 
 export async function setupAudio () {
   Audio.setAudioModeAsync({
@@ -114,29 +112,13 @@ export async function setupAudio () {
     playThroughEarpieceAndroid: true,
     interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX
   })
-
   chimes.map(async chime => {
     chime.audioObject = new Audio.Sound()
     try {
       await chime.audioObject.loadAsync(chime.sound)
-      // await chime.audioObject.playAsync()
-      // Your sound is playing!
     } catch (error) {
       // An error occurred!
     }
-    // const { sound } = await Audio.Sound.createAsync(chime.sound)
-    // await sound.setStatusAsync({
-    //   volume: 1
-    // })
-    // audio[chime.name] = async () => {
-    //   try {
-    //     await sound.setPositionAsync(0)
-    //     await sound.playAsync()
-    //   } catch (error) {
-    //     console.warn('sound error', { error })
-    //     // An error occurred!
-    //   }
-    // }
   })
 }
 
