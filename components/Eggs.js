@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import { Audio } from 'expo'
 import Colors from '../constants/Colors'
 import Layout from '../constants/Layout'
-import { shaman } from '../assets/audio/shaman'
+import { eggs } from '../assets/audio/eggs'
 import { getRandom } from '../components/utils'
 
 export async function setupAudio () {
@@ -15,7 +15,7 @@ export async function setupAudio () {
     playThroughEarpieceAndroid: true,
     interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX
   })
-  shaman.map(async chime => {
+  eggs.map(async chime => {
     chime.audioObject = new Audio.Sound()
     try {
       await chime.audioObject.loadAsync(chime.sound)
@@ -25,60 +25,31 @@ export async function setupAudio () {
   })
 }
 
-let offset = 0
-const sequence = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-
 export function playSequence () {
-  if (offset === 0) {
-    triggerSound(0)
-    offset++
-  } else if (offset >= 59) {
-    offset = 0
-  } else {
-    offset++
-  }
-  // triggerSound(sequence[offset])
-  // progress()
-  // setTimeout(() => {
-  //   triggerSound(sequence[offset])
-  //   progress()
-  // }, 300)
-  // setTimeout(() => {
-  //   triggerSound(sequence[offset])
-  //   progress()
-  // }, 600)
-  // setTimeout(() => {
-  //   triggerSound(sequence[offset])
-  //   progress()
-  // }, 900)
-}
-
-function progress () {
-  if (offset >= sequence.length - 1) {
-    offset = 0
-  } else {
-    offset++
-  }
+  triggerSound(0)
+  setTimeout(() => {
+    triggerSound(1)
+  }, 500)
 }
 
 async function triggerSound (sound) {
-  await shaman[sound].audioObject.stopAsync()
-  await shaman[sound].audioObject.setVolumeAsync(getRandom(0.8, 1))
-  await shaman[sound].audioObject.playAsync()
+  await eggs[sound].audioObject.stopAsync()
+  await eggs[sound].audioObject.setVolumeAsync(getRandom(0.8, 1))
+  await eggs[sound].audioObject.playAsync()
 }
 
-export class Shaman extends React.Component {
+export class Eggs extends React.Component {
   componentDidMount () {
     setupAudio()
   }
 
   render () {
-    return <View style={styles.shamanView} />
+    return <View style={styles.eggsView} />
   }
 }
 
 const styles = StyleSheet.create({
-  shamanView: {
+  eggsView: {
     flex: 1,
     width: '60%',
     left: '15%',

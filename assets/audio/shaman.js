@@ -1,5 +1,9 @@
 export const shaman = [
   {
+    name: '0',
+    sound: require('./shaman/shaman_minute.m4a')
+  },
+  {
     name: '1',
     sound: require('./shaman/1.m4a')
   },

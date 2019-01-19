@@ -9,7 +9,7 @@ import Colors from '../constants/Colors'
 import { RegularText, BoldText } from '../components/StyledText'
 
 import { BreakTimer } from '../components/BreakTimer'
-import { Chimes, playSequence } from '../components/Chimes'
+import { Shaman, playSequence } from '../components/Shaman'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -67,7 +67,7 @@ export default class HomeScreen extends React.Component {
         <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View styles={styles.timerView}>
-              <Chimes />
+              <Shaman />
             </View>
             <View style={styles.timerContainer}>
               <RegularText style={styles.duration}>
