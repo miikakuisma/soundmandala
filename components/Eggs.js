@@ -26,10 +26,20 @@ export async function setupAudio () {
 }
 
 export function playSequence () {
-  triggerSound(0)
+  triggerSound(1)
+  setTimeout(() => {
+    triggerSound(2)
+  }, 250)
   setTimeout(() => {
     triggerSound(1)
   }, 500)
+  setTimeout(() => {
+    triggerSound(2)
+  }, 750)
+}
+
+export function endSequence () {
+  triggerSound(3)
 }
 
 async function triggerSound (sound) {

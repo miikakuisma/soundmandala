@@ -26,44 +26,35 @@ export async function setupAudio () {
 }
 
 let offset = 0
-const sequence = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+let sequence = [2, 3, 5, 4, 3, 5]
 
 export function playSequence () {
-  if (offset === 0) {
-    triggerSound(0)
-    offset++
-  } else if (offset >= 59) {
-    offset = 0
-  } else {
-    offset++
-  }
-  // triggerSound(sequence[offset])
-  // progress()
-  // setTimeout(() => {
-  //   triggerSound(sequence[offset])
-  //   progress()
-  // }, 300)
-  // setTimeout(() => {
-  //   triggerSound(sequence[offset])
-  //   progress()
-  // }, 600)
-  // setTimeout(() => {
-  //   triggerSound(sequence[offset])
-  //   progress()
-  // }, 900)
+  triggerSound(sequence[offset])
+  advance()
+  setTimeout(() => {
+    triggerSound(sequence[offset])
+    advance()
+  }, getRandom(280, 300, true))
+  setTimeout(() => {
+    triggerSound(sequence[offset])
+    advance()
+  }, getRandom(660, 690, true))
 }
 
-function progress () {
-  if (offset >= sequence.length - 1) {
+function advance () {
+  if (offset === sequence.length - 1) {
     offset = 0
   } else {
     offset++
   }
+}
+
+export function endSequence () {
+  triggerSound(1)
 }
 
 async function triggerSound (sound) {
   await shaman[sound].audioObject.stopAsync()
-  await shaman[sound].audioObject.setVolumeAsync(getRandom(0.8, 1))
   await shaman[sound].audioObject.playAsync()
 }
 
