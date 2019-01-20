@@ -1,6 +1,7 @@
 import React from 'react'
-import { ScrollView, Slider, StyleSheet, Text, View, WebView } from 'react-native'
+import { ScrollView, Image, Slider, StyleSheet, Text, View, WebView } from 'react-native'
 import { LinearGradient, Haptic, WebBrowser, KeepAwake } from 'expo'
+import Swiper from 'react-native-swiper'
 
 import { getiOSNotificationPermission, listenForNotifications, createNotification, cancelNotification } from '../components/Notifications'
 
@@ -9,7 +10,9 @@ import Colors from '../constants/Colors'
 import { RegularText, BoldText } from '../components/StyledText'
 
 import { BreakTimer } from '../components/BreakTimer'
-import { Eggs, playSequence, endSequence } from '../components/Eggs'
+import { Chimes, playSequence, endSequence } from '../components/Chimes'
+import { Shaman } from '../components/Shaman'
+import { Eggs } from '../components/Eggs'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -31,6 +34,7 @@ export default class HomeScreen extends React.Component {
   }
 
   startPause () {
+    this.props.navigation.pop('Settings')
     this.setState({ pauseActive: true })
     KeepAwake.activate()
     createNotification(this.state.pauseDuration)
@@ -68,9 +72,32 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
         <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-            <View styles={styles.timerView}>
-              <Eggs />
-            </View>
+            <Swiper
+              style={styles.swiper}
+              onIndexChanged={(e) => console.log(e)}
+            >
+              <View style={styles.modeView}>
+                <Image
+                  style={styles.modeImage}
+                  source={require('../assets/images/logo.png')}
+                />
+                <Chimes />
+              </View>
+              <View style={styles.modeView}> 
+                <Image
+                  style={styles.modeImage}
+                  source={require('../assets/images/logo.png')}
+                />
+                <Shaman />
+              </View>
+              <View style={styles.modeView}> 
+                <Image
+                  style={styles.modeImage}
+                  source={require('../assets/images/logo.png')}
+                />
+                <Eggs />
+              </View>
+            </Swiper>
             <View style={styles.timerContainer}>
               <RegularText style={styles.duration}>
                 {this.state.pauseActive ? 'Time left' : 'Pause Duration'}
@@ -114,8 +141,20 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 30,
   },
-  timerView: {
-    flex: 1
+  swiper: {
+    paddingTop: '80%',
+    height: (Layout.window.height / 2),
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  modeView: {
+    justifyContent: 'center',
+    alignItems: 'center'    
+  },
+  modeImage: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain'
   },
   timerContainer: {
     height: (Layout.window.height / 2) - 80,
