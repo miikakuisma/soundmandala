@@ -38,6 +38,7 @@ export function playShaman () {
 export async function endShaman () {
   await shaman[1].audioObject.stopAsync()
   await shaman[0].audioObject.playAsync()
+  offset = 0
 }
 
 async function triggerSound (sound) {
