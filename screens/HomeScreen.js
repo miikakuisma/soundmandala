@@ -13,6 +13,7 @@ import { BreakTimer } from '../components/BreakTimer'
 import { Chimes, playChimes, endChimes } from '../components/Chimes'
 import { Shaman, playShaman, endShaman } from '../components/Shaman'
 import { Eggs, playEggs, endEggs } from '../components/Eggs'
+import { Coffee, playCoffee, endCoffee } from '../components/Coffee'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -35,7 +36,6 @@ export default class HomeScreen extends React.Component {
   }
 
   startPause () {
-    this.props.navigation.pop('Settings')
     this.setState({ pauseActive: true })
     KeepAwake.activate()
     createNotification(this.state.pauseDuration)
@@ -75,6 +75,9 @@ export default class HomeScreen extends React.Component {
       case 2:
         playEggs()
         break
+      case 3:
+        playCoffee()
+        break
     }
   }
 
@@ -88,6 +91,9 @@ export default class HomeScreen extends React.Component {
         break
       case 2:
         endEggs()
+        break
+      case 3:
+        endCoffee()
         break
     }
   }
@@ -138,6 +144,14 @@ export default class HomeScreen extends React.Component {
                 />
                 <Eggs />
               </View>
+              <View style={styles.modeView}> 
+                <Image
+                  style={styles.modeImage}
+                  // Photo by Nathan Dumlao
+                  source={require('../assets/images/nathan-dumlao-287719-unsplash.jpg')}
+                />
+                <Coffee />
+              </View>
             </Swiper>
             <View style={styles.timerContainer}>
               <RegularText style={styles.duration}>
@@ -175,15 +189,14 @@ const styles = StyleSheet.create({
     flex: 1
   },
   swiper: {
-    alignItems: 'center',
-    marginBottom: 40,
+    alignItems: 'center'
   },
   dots: {
     position: 'absolute',
-    bottom: 230
+    bottom: 300
   },
   pageContainer: {
-    flex: 1
+    flex: 1,
   },
   contentContainer: {
     flex: 1,
@@ -200,12 +213,13 @@ const styles = StyleSheet.create({
   timerContainer: {
     position: 'absolute',
     width: Layout.window.width,
-    height: 200,
+    height: 280,
     left: 0,
     bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     alignItems: 'center',
-    paddingTop: 20
+    paddingTop: 30,
+    paddingBottom: 40
   },
   duration: {
     color: Colors.white
@@ -213,7 +227,8 @@ const styles = StyleSheet.create({
   titleText: {
     color: Colors.white,
     fontSize: 32,
-    textAlign: 'center'
+    textAlign: 'center',
+    marginBottom: 10
   },
   slider: {
     width: '80%'

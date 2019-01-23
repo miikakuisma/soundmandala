@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import { Audio } from 'expo'
 import Colors from '../constants/Colors'
 import Layout from '../constants/Layout'
-import { shaman } from '../assets/audio/shaman'
+import { coffee } from '../assets/audio/coffee'
 
 export async function setupAudio () {
   Audio.setAudioModeAsync({
@@ -14,7 +14,7 @@ export async function setupAudio () {
     playThroughEarpieceAndroid: true,
     interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX
   })
-  shaman.map(async chime => {
+  coffee.map(async chime => {
     chime.audioObject = new Audio.Sound()
     try {
       await chime.audioObject.loadAsync(chime.sound)
@@ -26,37 +26,37 @@ export async function setupAudio () {
 
 let playing = false
 
-export function playShaman () {
+export function playCoffee () {
   if (!playing) {
     triggerSound(0)
     playing = true
   }
 }
 
-export async function endShaman () {
+export async function endCoffee () {
   playing = false
-  await shaman[0].audioObject.stopAsync()
-  await shaman[1].audioObject.playAsync()
+  await coffee[0].audioObject.stopAsync()
+  await coffee[1].audioObject.playAsync()
 }
 
 async function triggerSound (sound) {
-  await shaman[sound].audioObject.stopAsync()
-  await shaman[sound].audioObject.setIsLoopingAsync(true)
-  await shaman[sound].audioObject.playAsync()
+  await coffee[sound].audioObject.stopAsync()
+  await coffee[sound].audioObject.setIsLoopingAsync(true)
+  await coffee[sound].audioObject.playAsync()
 }
 
-export class Shaman extends React.Component {
+export class Coffee extends React.Component {
   componentDidMount () {
     setupAudio()
   }
 
   render () {
-    return <View style={styles.shamanView} />
+    return <View style={styles.coffeeView} />
   }
 }
 
 const styles = StyleSheet.create({
-  shamanView: {
+  coffeeView: {
     flex: 1,
     width: '60%',
     left: '15%',
