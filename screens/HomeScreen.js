@@ -8,6 +8,7 @@ import { getiOSNotificationPermission, listenForNotifications, createNotificatio
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
 import { RegularText, BoldText } from '../components/StyledText'
+import { MaterialIcons } from '@expo/vector-icons'
 
 import { BreakTimer } from '../components/BreakTimer'
 import { Chimes, playChimes, endChimes } from '../components/Chimes'
@@ -114,6 +115,9 @@ export default class HomeScreen extends React.Component {
             <Swiper
               style={styles.swiper}
               loop={false}
+              showsButtons
+              prevButton={<MaterialIcons name="chevron-left" size={32} color="white" />}
+              nextButton={<MaterialIcons name="chevron-right" size={32} color="white" />}
               scrollEnabled={!this.state.pauseActive}
               showsPagination={!this.state.pauseActive}
               activeDotColor='#fff'
@@ -152,6 +156,14 @@ export default class HomeScreen extends React.Component {
                 />
                 <Coffee />
               </View>
+              {/*<View style={styles.modeView}> 
+                <Image
+                  style={styles.modeImage}
+                  // Photo by James Kresser
+                  source={require('../assets/images/james-kresser-790158-unsplash.jpg')}
+                />
+
+              </View>*/}
             </Swiper>
             <View style={styles.timerContainer}>
               <RegularText style={styles.duration}>
