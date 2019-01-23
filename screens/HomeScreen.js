@@ -71,7 +71,7 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
-          <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+          <View style={styles.container} contentContainerStyle={styles.contentContainer}>
             <Swiper
               style={styles.swiper}
               onIndexChanged={(e) => console.log(e)}
@@ -122,7 +122,7 @@ export default class HomeScreen extends React.Component {
                 onCompleted={this.completedPause.bind(this)}
               />
             </View>
-          </ScrollView>
+          </View>
         </LinearGradient>
       </View>
     );
@@ -131,38 +131,37 @@ export default class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1
+  },
+  swiper: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  pageContainer: {
+    flex: 1
+  },
+  contentContainer: {
     flex: 1,
+    paddingBottom: 30
+  },
+  modeView: {
+    alignItems: 'center'
+  },
+  modeImage: {
+    width: Layout.window.width,
+    resizeMode: 'cover'
+  },
+  timerContainer: {
+    alignItems: 'center',
+    paddingBottom: 20
+  },
+  duration: {
+    color: Colors.black
   },
   titleText: {
     color: Colors.black,
     fontSize: 32,
     textAlign: 'center'
-  },
-  contentContainer: {
-    paddingTop: 30,
-  },
-  swiper: {
-    paddingTop: '80%',
-    height: (Layout.window.height / 2),
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  modeView: {
-    justifyContent: 'center',
-    alignItems: 'center'    
-  },
-  modeImage: {
-    width: 150,
-    height: 150,
-    resizeMode: 'contain'
-  },
-  timerContainer: {
-    height: (Layout.window.height / 2) - 80,
-    paddingTop: '20%',
-    alignItems: 'center'
-  },
-  duration: {
-    color: Colors.black
   },
   slider: {
     width: '80%'
