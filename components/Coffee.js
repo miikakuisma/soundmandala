@@ -34,8 +34,9 @@ export function playCoffee () {
 }
 
 export async function endCoffee () {
-  coffee[0].audioObject.stopAsync()
-  coffee[1].audioObject.playAsync()
+  await coffee[0].audioObject.stopAsync()
+  await coffee[1].audioObject.stopAsync()
+  await coffee[1].audioObject.playAsync()
   playing = false
 }
 

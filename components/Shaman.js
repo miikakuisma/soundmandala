@@ -34,8 +34,9 @@ export function playShaman () {
 }
 
 export async function endShaman () {
-  shaman[0].audioObject.stopAsync()
-  shaman[1].audioObject.playAsync()
+  await shaman[0].audioObject.stopAsync()
+  await shaman[1].audioObject.stopAsync()
+  await shaman[1].audioObject.playAsync()
   playing = false
 }
 
