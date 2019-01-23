@@ -26,14 +26,14 @@ export async function setupAudio () {
 }
 
 export function playEggs () {
-  triggerSound(1)
+  triggerSound(0)
   setTimeout(() => {
-    triggerSound(2)
+    triggerSound(1)
   }, 500)
 }
 
 export function endEggs () {
-  triggerSound(3)
+  triggerSound(2)
 }
 
 async function triggerSound (sound) {

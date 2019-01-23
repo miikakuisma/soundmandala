@@ -1,9 +1,5 @@
 export const chimes = [
   {
-    name: 'empty',
-    sound: null
-  },
-  {
     name: 'one_a',
     sound: require('./chimes/1_a.m4a')
   },

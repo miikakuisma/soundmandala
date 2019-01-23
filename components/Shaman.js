@@ -24,21 +24,19 @@ export async function setupAudio () {
   })
 }
 
-let offset = 0
+let playing = false
 
 export function playShaman () {
-  if (offset === 0) {
-    triggerSound(1)
-    offset++
-  } else {
-    offset++
+  if (!playing) {
+    triggerSound(0)
+    playing = true
   }
 }
 
 export async function endShaman () {
-  await shaman[1].audioObject.stopAsync()
-  await shaman[0].audioObject.playAsync()
-  offset = 0
+  await shaman[0].audioObject.stopAsync()
+  await shaman[1].audioObject.playAsync()
+  playing = false
 }
 
 async function triggerSound (sound) {
