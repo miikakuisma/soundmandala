@@ -10,9 +10,9 @@ import Colors from '../constants/Colors'
 import { RegularText, BoldText } from '../components/StyledText'
 
 import { BreakTimer } from '../components/BreakTimer'
-import { Chimes, playSequence, endSequence } from '../components/Chimes'
-import { Shaman } from '../components/Shaman'
-import { Eggs } from '../components/Eggs'
+import { Chimes, playChimes, endChimes } from '../components/Chimes'
+import { Shaman, playShaman, endShaman } from '../components/Shaman'
+import { Eggs, playEggs, endEggs } from '../components/Eggs'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -24,7 +24,8 @@ export default class HomeScreen extends React.Component {
     this.state = {
       pauseDuration: 1,
       pauseActive: false,
-      timerValue: null
+      timerValue: null,
+      mode: 0 // 0 = chimes | 1 = shaman | 2 = eggs
     }
   }
 
@@ -42,14 +43,14 @@ export default class HomeScreen extends React.Component {
 
   cancelPause () {
     this.setState({ pauseActive: false })
-    endSequence()
+    this.endSequence()
     KeepAwake.deactivate()
     cancelNotification()
   }
 
   completedPause () {
     this.setState({ pauseActive: false })
-    endSequence()
+    this.endSequence()
     KeepAwake.deactivate()
   }
 
@@ -60,7 +61,39 @@ export default class HomeScreen extends React.Component {
 
   onTimerUpdate (value) {
     this.setState({ timerValue: value })
-    playSequence()
+    this.playSequence()
+  }
+
+  playSequence () {
+    switch (this.state.mode) {
+      case 0:
+        playChimes()
+        break
+      case 1:
+        playShaman()
+        break
+      case 2:
+        playEggs()
+        break
+    }
+  }
+
+  endSequence () {
+    switch (this.state.mode) {
+      case 0:
+        endChimes()
+        break
+      case 1:
+        endShaman()
+        break
+      case 2:
+        endEggs()
+        break
+    }
+  }
+
+  onModeChange (index) {
+    this.setState({ mode: index })
   }
 
   render() {
@@ -74,26 +107,34 @@ export default class HomeScreen extends React.Component {
           <View style={styles.container} contentContainerStyle={styles.contentContainer}>
             <Swiper
               style={styles.swiper}
-              onIndexChanged={(e) => console.log(e)}
+              loop={false}
+              scrollEnabled={!this.state.pauseActive}
+              showsPagination={!this.state.pauseActive}
+              activeDotColor='#fff'
+              paginationStyle={styles.dots}
+              onIndexChanged={(index) => this.onModeChange(index)}
             >
               <View style={styles.modeView}>
                 <Image
                   style={styles.modeImage}
-                  source={require('../assets/images/logo.png')}
+                  // Photo by Suresh Kumar
+                  source={require('../assets/images/suresh-kumar-155029-unsplash.jpg')}
                 />
                 <Chimes />
               </View>
               <View style={styles.modeView}> 
                 <Image
                   style={styles.modeImage}
-                  source={require('../assets/images/logo.png')}
+                  // Photo by Paul Zoetemeijer
+                  source={require('../assets/images/paul-zoetemeijer-728643-unsplash.jpg')}
                 />
                 <Shaman />
               </View>
               <View style={styles.modeView}> 
                 <Image
                   style={styles.modeImage}
-                  source={require('../assets/images/logo.png')}
+                  // Photo by Photo by Joseph Gonzalez
+                  source={require('../assets/images/joseph-gonzalez-176749-unsplash.jpg')}
                 />
                 <Eggs />
               </View>
@@ -103,7 +144,7 @@ export default class HomeScreen extends React.Component {
                 {this.state.pauseActive ? 'Time left' : 'Pause Duration'}
               </RegularText>
               <BoldText style={styles.titleText}>
-                 {this.state.pauseActive ? timeLeft : this.state.pauseDuration + ' minutes'}
+               {this.state.pauseActive ? timeLeft : this.state.pauseDuration + ' minutes'}
               </BoldText>
               <Slider
                 style={styles.slider}
@@ -137,6 +178,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 40,
   },
+  dots: {
+    position: 'absolute',
+    bottom: 230
+  },
   pageContainer: {
     flex: 1
   },
@@ -149,21 +194,28 @@ const styles = StyleSheet.create({
   },
   modeImage: {
     width: Layout.window.width,
+    height: Layout.window.height,
     resizeMode: 'cover'
   },
   timerContainer: {
+    position: 'absolute',
+    width: Layout.window.width,
+    height: 200,
+    left: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
     alignItems: 'center',
-    paddingBottom: 20
+    paddingTop: 20
   },
   duration: {
-    color: Colors.black
+    color: Colors.white
   },
   titleText: {
-    color: Colors.black,
+    color: Colors.white,
     fontSize: 32,
     textAlign: 'center'
   },
   slider: {
     width: '80%'
-  }
+  },
 })

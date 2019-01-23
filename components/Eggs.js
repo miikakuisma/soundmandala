@@ -25,26 +25,19 @@ export async function setupAudio () {
   })
 }
 
-export function playSequence () {
+export function playEggs () {
   triggerSound(1)
   setTimeout(() => {
     triggerSound(2)
-  }, 250)
-  setTimeout(() => {
-    triggerSound(1)
   }, 500)
-  setTimeout(() => {
-    triggerSound(2)
-  }, 750)
 }
 
-export function endSequence () {
+export function endEggs () {
   triggerSound(3)
 }
 
 async function triggerSound (sound) {
   await eggs[sound].audioObject.stopAsync()
-  await eggs[sound].audioObject.setVolumeAsync(getRandom(0.8, 1))
   await eggs[sound].audioObject.playAsync()
 }
 

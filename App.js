@@ -20,7 +20,7 @@ export default class App extends React.Component {
     } else {
       return (
         <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          {Platform.OS === 'ios' && <StatusBar barStyle="light-content" />}
           <AppNavigator />
         </View>
       );
@@ -30,7 +30,10 @@ export default class App extends React.Component {
   _loadResourcesAsync = async () => {
     return Promise.all([
       Asset.loadAsync([
-        require('./assets/images/logo.png')
+        require('./assets/images/logo.png'),
+        require('./assets/images/suresh-kumar-155029-unsplash.jpg'), // chime
+        require('./assets/images/paul-zoetemeijer-728643-unsplash.jpg'), // drum
+        require('./assets/images/joseph-gonzalez-176749-unsplash.jpg') // eggs
       ]),
       Font.loadAsync({
         // This is the font that we are using for our tab bar

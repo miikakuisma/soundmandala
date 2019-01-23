@@ -4,7 +4,6 @@ import { Audio } from 'expo'
 import Colors from '../constants/Colors'
 import Layout from '../constants/Layout'
 import { shaman } from '../assets/audio/shaman'
-import { getRandom } from '../components/utils'
 
 export async function setupAudio () {
   Audio.setAudioModeAsync({
@@ -26,35 +25,24 @@ export async function setupAudio () {
 }
 
 let offset = 0
-let sequence = [2, 3, 5, 4, 3, 5]
 
-export function playSequence () {
-  triggerSound(sequence[offset])
-  advance()
-  setTimeout(() => {
-    triggerSound(sequence[offset])
-    advance()
-  }, getRandom(280, 300, true))
-  setTimeout(() => {
-    triggerSound(sequence[offset])
-    advance()
-  }, getRandom(660, 690, true))
-}
-
-function advance () {
-  if (offset === sequence.length - 1) {
-    offset = 0
+export function playShaman () {
+  if (offset === 0) {
+    triggerSound(1)
+    offset++
   } else {
     offset++
   }
 }
 
-export function endSequence () {
-  triggerSound(1)
+export async function endShaman () {
+  await shaman[1].audioObject.stopAsync()
+  await shaman[0].audioObject.playAsync()
 }
 
 async function triggerSound (sound) {
   await shaman[sound].audioObject.stopAsync()
+  await shaman[sound].audioObject.setIsLoopingAsync(true)
   await shaman[sound].audioObject.playAsync()
 }
 

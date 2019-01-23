@@ -31,7 +31,7 @@ let offset = 0
 // 0 = empty, 4, 7, 10, 13, 16, 19, 22
 let sequence = [1, 7, 10, 1, 7, 10, 13, 16, 13, 10, 7, 3, 1, 7, 10, 16, 10, 13, 7, 10, 7, 10, 3, 7, 3, 7, 1, 3, 1, 3, 7, 10, 13, 16, 19, 22, 19, 22, 19, 16, 19, 22, 16, 10, 7, 13, 10, 7, 3, 10, 7, 3, 7, 3, 1, 3, 7, 10]
 
-export function playSequence () {
+export function playChimes () {
   if (getRandom(30, 100) < wind) {
     triplay(sequence[offset])
     offset++
@@ -41,7 +41,7 @@ export function playSequence () {
   }
 }
 
-export function endSequence () {
+export function endChimes () {
   triggerSound(24)
 }
 

@@ -4,6 +4,10 @@ export const shaman = [
     sound: null
   },
   {
+    name: 'loop',
+    sound: require('./shaman/shaman_loop.m4a')
+  },
+  {
     name: '1',
     sound: require('./shaman/drum1.m4a')
   },
