@@ -28,16 +28,15 @@ let playing = false
 
 export function playCoffee () {
   if (!playing) {
-    coffee[1].audioObject.stopAsync()
     triggerSound(0)
     playing = true
   }
 }
 
 export async function endCoffee () {
-  await coffee[0].audioObject.stopAsync()
   await coffee[1].audioObject.stopAsync()
   await coffee[1].audioObject.playAsync()
+  await coffee[0].audioObject.stopAsync()
   playing = false
 }
 
