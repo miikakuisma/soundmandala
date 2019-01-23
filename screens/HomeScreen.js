@@ -115,7 +115,7 @@ export default class HomeScreen extends React.Component {
             <Swiper
               style={styles.swiper}
               loop={false}
-              showsButtons
+              showsButtons={!this.state.pauseActive}
               prevButton={<MaterialIcons name="chevron-left" size={32} color="white" />}
               nextButton={<MaterialIcons name="chevron-right" size={32} color="white" />}
               scrollEnabled={!this.state.pauseActive}
