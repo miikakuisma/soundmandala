@@ -28,10 +28,10 @@ async function setupAudio () {
 let wind = 60 // 10 - 100
 let offset = 0
 
-// 0 = empty, 4, 7, 10, 13, 16, 19, 22
-let sequence = [1, 7, 10, 1, 7, 10, 13, 16, 13, 10, 7, 3, 1, 7, 10, 16, 10, 13, 7, 10, 7, 10, 3, 7, 3, 7, 1, 3, 1, 3, 7, 10, 13, 16, 19, 22, 19, 22, 19, 16, 19, 22, 16, 10, 7, 13, 10, 7, 3, 10, 7, 3, 7, 3, 1, 3, 7, 10]
+// 0, 3, 6, 9, 12, 15, 18, 21
+let sequence = [0, 6, 9, 0, 6, 9, 12, 15, 12, 9, 6, 3, 0, 6, 9, 15, 9, 12, 6, 9, 6, 9, 3, 6, 3, 6, 0, 3, 0, 3, 6, 9, 12, 15, 18, 21, 18, 21, 18, 15, 18, 21, 15, 9, 6, 12, 9, 6, 3, 9, 6, 3, 6, 3, 0, 3, 6, 9]
 
-export function playSequence () {
+export function playChimes () {
   if (getRandom(30, 100) < wind) {
     triplay(sequence[offset])
     offset++
@@ -41,8 +41,8 @@ export function playSequence () {
   }
 }
 
-export function endSequence () {
-  triggerSound(24)
+export function endChimes () {
+  triggerSound(23)
 }
 
 function triplay (number) {

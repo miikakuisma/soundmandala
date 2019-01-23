@@ -1,6 +1,7 @@
 import React from 'react'
 import { AppState, StyleSheet, View, Text, Button } from 'react-native'
 import Colors from '../constants/Colors'
+import Layout from '../constants/Layout'
 
 let leftAppTimestamp
 let leftAppTimerValue
@@ -95,12 +96,22 @@ export class BreakTimer extends React.Component {
 
   render () {
     if (this.state.running) {
-      return <View>
-        <Button onPress={this.handleCancel.bind(this)} title='Cancel' />
+      return <View style={styles.cancelButton}>
+        <Button
+          onPress={this.handleCancel.bind(this)}
+          title='Cancel'
+          color='#fff'
+        />
       </View>
     }
     if (!this.state.running && !this.state.completed || this.state.completed) {
-      return <Button onPress={this.handleStart.bind(this)} title='Start' />
+      return <View style={styles.startButton}>
+        <Button
+          onPress={this.handleStart.bind(this)}
+          title='Start'
+          color='#000'
+        />
+      </View>
     }
   }
 }
@@ -111,4 +122,22 @@ const styles = StyleSheet.create({
   //   fontSize: 64,
   //   textAlign: 'center'
   // }
+  startButton: {
+    flex: 1,
+    width: Layout.window.width - 20,
+    justifyContent: 'center',
+    margin: 15,
+    color: '#000',
+    borderRadius: 9,
+    backgroundColor: Colors.beige
+  },
+  cancelButton: {
+    flex: 1,
+    width: Layout.window.width - 20,
+    justifyContent: 'center',
+    margin: 15,
+    color: '#000',
+    borderRadius: 9,
+    backgroundColor: 'transparent'
+  }
 })

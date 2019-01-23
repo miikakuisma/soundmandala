@@ -1,9 +1,5 @@
 export const eggs = [
   {
-    name: 'empty',
-    sound: null
-  },
-  {
     name: '1',
     sound: require('./eggs/tik.m4a')
   },
@@ -12,7 +8,7 @@ export const eggs = [
     sound: require('./eggs/tok.m4a')
   },
   {
-    name: '1',
+    name: '3',
     sound: require('./eggs/ring.m4a')
   }
 ]
