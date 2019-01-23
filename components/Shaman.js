@@ -28,6 +28,7 @@ let playing = false
 
 export function playShaman () {
   if (!playing) {
+    shaman[1].audioObject.stopAsync()
     triggerSound(0)
     playing = true
   }

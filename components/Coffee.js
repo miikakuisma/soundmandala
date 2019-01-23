@@ -28,6 +28,7 @@ let playing = false
 
 export function playCoffee () {
   if (!playing) {
+    coffee[1].audioObject.stopAsync()
     triggerSound(0)
     playing = true
   }
