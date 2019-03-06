@@ -1,6 +1,6 @@
 import React from 'react'
 import { ScrollView, Image, Slider, StyleSheet, Text, View, WebView } from 'react-native'
-import { LinearGradient, Haptic, WebBrowser, KeepAwake } from 'expo'
+import { LinearGradient, Haptic, WebBrowser, KeepAwake, Video } from 'expo'
 import Swiper from 'react-native-swiper'
 
 import { getiOSNotificationPermission, listenForNotifications, createNotification, cancelNotification } from '../components/Notifications'
@@ -125,6 +125,15 @@ export default class HomeScreen extends React.Component {
               onIndexChanged={(index) => this.onModeChange(index)}
             >
               <View style={styles.modeView}>
+                <Video
+                  source={require('../assets/video/PeruvianLoop.mp4')}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={false}
+                  shouldPlay={this.state.pauseActive}
+                  isLooping
+                  style={styles.modeImage}
+                />
                 <Image
                   style={styles.modeImage}
                   // Photo by Suresh Kumar
