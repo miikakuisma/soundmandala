@@ -13,8 +13,9 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { BreakTimer } from '../components/BreakTimer'
 import { Chimes, playChimes, endChimes } from '../components/Chimes'
 import { Shaman, playShaman, endShaman } from '../components/Shaman'
-import { Eggs, playEggs, endEggs } from '../components/Eggs'
 import { Coffee, playCoffee, endCoffee } from '../components/Coffee'
+import { Peruvian, playPeruvian, endPeruvian} from '../components/Peruvian'
+import { Golden, playGolden, endGolden} from '../components/Golden'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -74,10 +75,16 @@ export default class HomeScreen extends React.Component {
         playShaman()
         break
       case 2:
-        playEggs()
+        playCoffee()
         break
       case 3:
-        playCoffee()
+        playCosmic()
+        break
+      case 4:
+        playPeruvian()
+        break
+      case 5:
+        playGolden()
         break
     }
   }
@@ -91,10 +98,16 @@ export default class HomeScreen extends React.Component {
         endShaman()
         break
       case 2:
-        endEggs()
+        endCoffee()
         break
       case 3:
-        endCoffee()
+        endCosmic()
+        break
+      case 4:
+        endPeruvian()
+        break
+      case 5:
+        endGolden()
         break
     }
   }
@@ -125,54 +138,68 @@ export default class HomeScreen extends React.Component {
               onIndexChanged={(index) => this.onModeChange(index)}
             >
               <View style={styles.modeView}>
-                <Video
-                  source={require('../assets/video/PeruvianLoop.mp4')}
-                  rate={1.0}
-                  volume={1.0}
-                  isMuted={false}
-                  shouldPlay={this.state.pauseActive}
-                  isLooping
-                  style={styles.modeImage}
-                />
                 <Image
-                  style={styles.modeImage}
+                  // Chimes
                   // Photo by Suresh Kumar
+                  style={styles.modeImage}
                   source={require('../assets/images/suresh-kumar-155029-unsplash.jpg')}
                 />
                 <Chimes />
               </View>
               <View style={styles.modeView}> 
                 <Image
-                  style={styles.modeImage}
+                  // Shaman
                   // Photo by Paul Zoetemeijer
+                  style={styles.modeImage}
                   source={require('../assets/images/paul-zoetemeijer-728643-unsplash.jpg')}
                 />
                 <Shaman />
               </View>
               <View style={styles.modeView}> 
                 <Image
-                  style={styles.modeImage}
-                  // Photo by Photo by Joseph Gonzalez
-                  source={require('../assets/images/joseph-gonzalez-176749-unsplash.jpg')}
-                />
-                <Eggs />
-              </View>
-              <View style={styles.modeView}> 
-                <Image
-                  style={styles.modeImage}
+                  // Coffee
                   // Photo by Nathan Dumlao
+                  style={styles.modeImage}
                   source={require('../assets/images/nathan-dumlao-287719-unsplash.jpg')}
                 />
                 <Coffee />
               </View>
-              {/*<View style={styles.modeView}> 
+              <View style={styles.modeView}> 
                 <Image
-                  style={styles.modeImage}
+                  // Cosmic
                   // Photo by James Kresser
+                  style={styles.modeImage}
                   source={require('../assets/images/james-kresser-790158-unsplash.jpg')}
                 />
-
-              </View>*/}
+              </View>
+              <View style={styles.modeView}>
+                <Video
+                  // Electric Sun
+                  source={require('../assets/video/ElectricSun.mp4')}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={true}
+                  shouldPlay={this.state.pauseActive}
+                  isLooping
+                  resizeMode='cover'
+                  style={styles.modeVideo}
+                />
+                <Peruvian />
+              </View>
+              <View style={styles.modeView}>
+                <Video
+                  // Golden Era
+                  source={require('../assets/video/GoldenEra.mp4')}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={true}
+                  shouldPlay={this.state.pauseActive}
+                  isLooping
+                  resizeMode='cover'
+                  style={styles.modeVideo}
+                />
+                <Golden />
+              </View>
             </Swiper>
             <View style={styles.timerContainer}>
               <RegularText style={styles.duration}>
@@ -214,7 +241,7 @@ const styles = StyleSheet.create({
   },
   dots: {
     position: 'absolute',
-    bottom: 300
+    bottom: 30
   },
   pageContainer: {
     flex: 1,
@@ -230,6 +257,10 @@ const styles = StyleSheet.create({
     width: Layout.window.width,
     height: Layout.window.height,
     resizeMode: 'cover'
+  },
+  modeVideo: {
+    width: Layout.window.width,
+    height: Layout.window.height
   },
   timerContainer: {
     position: 'absolute',

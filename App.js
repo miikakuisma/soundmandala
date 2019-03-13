@@ -35,8 +35,9 @@ export default class App extends React.Component {
         require('./assets/images/logo.png'),
         require('./assets/images/suresh-kumar-155029-unsplash.jpg'), // chime
         require('./assets/images/paul-zoetemeijer-728643-unsplash.jpg'), // drum
-        require('./assets/images/joseph-gonzalez-176749-unsplash.jpg'), // eggs
-        require('./assets/images/james-kresser-790158-unsplash.jpg')
+        require('./assets/images/james-kresser-790158-unsplash.jpg'),
+        require('./assets/video/ElectricSun.mp4'),
+        require('./assets/video/GoldenEra.mp4')
       ]),
       Font.loadAsync({
         // This is the font that we are using for our tab bar
