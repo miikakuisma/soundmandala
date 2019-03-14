@@ -1,12 +1,11 @@
 {
   "expo": {
     "name": "Sound Mandala",
-    "slug": "Sound Mandala",
+    "slug": "soundmandala",
     "privacy": "unlisted",
     "sdkVersion": "32.0.0",
     "platforms": [
-      "ios",
-      "android"
+      "ios"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -23,7 +22,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.moreyes.soundmandala"
     },
     "description": ""
   }

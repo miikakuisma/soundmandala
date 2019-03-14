@@ -23,7 +23,7 @@ export function listenForNotifications () {
 
 export function createNotification (minutes) {
   const localNotification = {
-    title: 'Pauseground',
+    title: 'Sound Mandala',
     body: 'Timer finished',
     data: {
       somekey: 'some value'
