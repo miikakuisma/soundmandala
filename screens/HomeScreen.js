@@ -14,8 +14,8 @@ import { BreakTimer } from '../components/BreakTimer'
 import { Chimes, playChimes, endChimes } from '../components/Chimes'
 import { Shaman, playShaman, endShaman } from '../components/Shaman'
 import { Coffee, playCoffee, endCoffee } from '../components/Coffee'
-import { Peruvian, playPeruvian, endPeruvian} from '../components/Peruvian'
-import { Golden, playGolden, endGolden} from '../components/Golden'
+import { Cosmic, playCosmic, endCosmic} from '../components/Cosmic'
+import { Withyou, playWithyou, endWithyou } from '../components/Withyou'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -81,10 +81,7 @@ export default class HomeScreen extends React.Component {
         playCosmic()
         break
       case 4:
-        playPeruvian()
-        break
-      case 5:
-        playGolden()
+        playWithyou()
         break
     }
   }
@@ -104,10 +101,7 @@ export default class HomeScreen extends React.Component {
         endCosmic()
         break
       case 4:
-        endPeruvian()
-        break
-      case 5:
-        endGolden()
+        endWithyou()
         break
     }
   }
@@ -142,7 +136,7 @@ export default class HomeScreen extends React.Component {
                   // Chimes
                   // Photo by Suresh Kumar
                   style={styles.modeImage}
-                  source={require('../assets/images/suresh-kumar-155029-unsplash.jpg')}
+                  source={require('../assets/images/chimes.jpg')}
                 />
                 <Chimes />
               </View>
@@ -151,54 +145,36 @@ export default class HomeScreen extends React.Component {
                   // Shaman
                   // Photo by Paul Zoetemeijer
                   style={styles.modeImage}
-                  source={require('../assets/images/paul-zoetemeijer-728643-unsplash.jpg')}
+                  source={require('../assets/images/shaman.jpg')}
                 />
                 <Shaman />
               </View>
-              <View style={styles.modeView}> 
+              <View style={styles.modeView}>
                 <Image
                   // Coffee
                   // Photo by Nathan Dumlao
                   style={styles.modeImage}
-                  source={require('../assets/images/nathan-dumlao-287719-unsplash.jpg')}
+                  source={require('../assets/images/coffee.jpg')}
                 />
                 <Coffee />
               </View>
-              <View style={styles.modeView}> 
+              <View style={styles.modeView}>
                 <Image
                   // Cosmic
                   // Photo by James Kresser
                   style={styles.modeImage}
-                  source={require('../assets/images/james-kresser-790158-unsplash.jpg')}
+                  source={require('../assets/images/cosmic.jpg')}
                 />
+                <Cosmic />
               </View>
               <View style={styles.modeView}>
-                <Video
-                  // Electric Sun
-                  source={require('../assets/video/ElectricSun.mp4')}
-                  rate={1.0}
-                  volume={1.0}
-                  isMuted={true}
-                  shouldPlay={this.state.pauseActive}
-                  isLooping
-                  resizeMode='cover'
-                  style={styles.modeVideo}
+                <Image
+                  // Withyou
+                  // Photo by Tylex Nix
+                  style={styles.modeImage}
+                  source={require('../assets/images/withyou.jpg')}
                 />
-                <Peruvian />
-              </View>
-              <View style={styles.modeView}>
-                <Video
-                  // Golden Era
-                  source={require('../assets/video/GoldenEra.mp4')}
-                  rate={1.0}
-                  volume={1.0}
-                  isMuted={true}
-                  shouldPlay={this.state.pauseActive}
-                  isLooping
-                  resizeMode='cover'
-                  style={styles.modeVideo}
-                />
-                <Golden />
+                <Withyou />
               </View>
             </Swiper>
             <View style={styles.timerContainer}>
@@ -257,6 +233,18 @@ const styles = StyleSheet.create({
     width: Layout.window.width,
     height: Layout.window.height,
     resizeMode: 'cover'
+  },
+  title: {
+    position: 'absolute',
+    width: 100,
+    top: 50,
+    left: (Layout.window.width / 2) - 50,
+    zIndex: 1,
+    color: Colors.white,
+    padding: 5,
+    backgroundColor: Colors.black,
+    textAlign: 'center',
+    borderRadius: 50
   },
   modeVideo: {
     width: Layout.window.width,

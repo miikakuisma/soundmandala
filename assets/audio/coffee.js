@@ -1,4 +1,4 @@
-export const coffee = [
+export const audioConfig = [
   {
     name: 'loop',
     sound: require('./coffee/coffee_loop.m4a')

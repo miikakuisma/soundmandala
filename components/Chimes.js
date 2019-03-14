@@ -1,29 +1,12 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Audio } from 'expo'
-import Colors from '../constants/Colors'
-import Layout from '../constants/Layout'
-import { chimes } from '../assets/audio/chimes'
+import { View } from 'react-native'
+import { setupAudio } from './utils'
+import { audioConfig } from '../assets/audio/chimes'
 import { getRandom } from '../components/utils'
 
-async function setupAudio () {
-  Audio.setAudioModeAsync({
-    allowsRecordingIOS: false,
-    interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-    playsInSilentModeIOS: true,
-    shouldDuckAndroid: true,
-    playThroughEarpieceAndroid: true,
-    interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX
-  })
-  chimes.map(async chime => {
-    chime.audioObject = new Audio.Sound()
-    try {
-      await chime.audioObject.loadAsync(chime.sound)
-    } catch (error) {
-      console.log('Error while loading audio objects (Chimes)')
-    }
-  })
-}
+// Simple wind chime simulation
+// Miika Kuisma
+// Moreyes Oy
 
 let wind = 60 // 10 - 100
 let offset = 0
@@ -65,33 +48,18 @@ function triplay (number) {
 }
 
 async function triggerSound (sound) {
-  await chimes[sound].audioObject.setVolumeAsync(0)
-  await chimes[sound].audioObject.stopAsync()
-  await chimes[sound].audioObject.setVolumeAsync(getRandom(0.1, 1))
-  await chimes[sound].audioObject.playAsync()
+  await audioConfig[sound].audioObject.setVolumeAsync(0)
+  await audioConfig[sound].audioObject.stopAsync()
+  await audioConfig[sound].audioObject.setVolumeAsync(getRandom(0.1, 1))
+  await audioConfig[sound].audioObject.playAsync()
 }
 
 export class Chimes extends React.Component {
   componentDidMount () {
-    setupAudio()
+    setupAudio(audioConfig)
   }
 
   render () {
-    return <View style={styles.chimesView} />
+    return <View />
   }
 }
-
-const styles = StyleSheet.create({
-  chimesView: {
-    flex: 1,
-    width: '60%',
-    left: '20%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    color: Colors.white,
-    height: Layout.window.height / 2,
-    paddingTop: '50%',
-    fontSize: 84,
-    alignItems: 'center'
-  }
-})

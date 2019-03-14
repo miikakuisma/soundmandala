@@ -1,4 +1,4 @@
-export const shaman = [
+export const audioConfig = [
   {
     name: 'loop',
     sound: require('./shaman/shaman_minute.m4a')

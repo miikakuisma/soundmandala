@@ -1,4 +1,4 @@
-export const chimes = [
+export const audioConfig = [
   {
     name: 'one_a',
     sound: require('./chimes/1_a.m4a')
