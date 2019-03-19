@@ -108,8 +108,8 @@ export class BreakTimer extends React.Component {
       return <View style={styles.startButton}>
         <Button
           onPress={this.handleStart.bind(this)}
-          title='Start'
-          color='#000'
+          title='START'
+          color='#fff'
         />
       </View>
     }
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     margin: 15,
     color: '#000',
     borderRadius: 9,
-    backgroundColor: Colors.beige
+    backgroundColor: Colors.logoBlue
   },
   cancelButton: {
     flex: 1,
@@ -138,6 +138,6 @@ const styles = StyleSheet.create({
     margin: 15,
     color: '#000',
     borderRadius: 9,
-    backgroundColor: 'transparent'
+    backgroundColor: Colors.red
   }
 })

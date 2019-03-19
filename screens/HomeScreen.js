@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
   },
   miikalogo: {
     position: 'absolute',
-    bottom: 373,
+    bottom: 248,
     zIndex: 2,
     width: 64,
     height: 64,
@@ -325,7 +325,8 @@ const styles = StyleSheet.create({
     paddingBottom: 40
   },
   duration: {
-    color: Colors.white
+    color: Colors.white,
+    paddingTop: 10
   },
   titleText: {
     color: Colors.white,
