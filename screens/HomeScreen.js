@@ -154,6 +154,7 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
         <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
           <View style={styles.container} contentContainerStyle={styles.contentContainer}>
+            <Image source={require('../assets/images/miikakuisma-logo-symbol-white.png')} style={styles.miikalogo} />
             <Swiper
               style={styles.swiper}
               loop={false}
@@ -287,6 +288,14 @@ const styles = StyleSheet.create({
     width: Layout.window.width,
     height: Layout.window.height,
     resizeMode: 'cover'
+  },
+  miikalogo: {
+    position: 'absolute',
+    top: 50,
+    zIndex: 2,
+    width: 64,
+    height: 64,
+    left: Layout.window.width / 2 - 32
   },
   title: {
     position: 'absolute',
