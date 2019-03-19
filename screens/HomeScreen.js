@@ -132,13 +132,13 @@ export default class HomeScreen extends React.Component {
       case 1:
         return 'Wind Chimes'
       case 2:
-        return 'Coffee'
+        return 'Dripping'
       case 3:
-        return 'Melancholy' // 128
+        return 'Melankolina' // 128
       case 4:
-        return 'Univeral Being'
+        return 'With You' // with you
       case 5:
-        return 'Cosmic Connection'
+        return 'Antenna'
       case 6:
         return 'Distant Waves' // beatless
     }
