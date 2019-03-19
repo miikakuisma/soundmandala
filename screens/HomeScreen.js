@@ -28,10 +28,10 @@ export default class HomeScreen extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      pauseDuration: 1,
+      pauseDuration: 3,
       pauseActive: false,
       timerValue: null,
-      mode: 0 // 0 = chimes | 1 = shaman | 2 = eggs
+      mode: 0 // 0 = chimes | 1 = shaman etc
     }
   }
 
@@ -72,25 +72,25 @@ export default class HomeScreen extends React.Component {
   playSequence () {
     switch (this.state.mode) {
       case 0:
-        playChimes()
+        playShaman()
         break
       case 1:
-        playShaman()
+        playChimes()
         break
       case 2:
         playCoffee()
         break
       case 3:
-        playCosmic()
+        play128()
         break
       case 4:
         playWithyou()
         break
       case 5:
-        playBeatless()
+        playCosmic()
         break
       case 6:
-        play128()
+        playBeatless()
         break
     }
   }
@@ -98,25 +98,25 @@ export default class HomeScreen extends React.Component {
   endSequence () {
     switch (this.state.mode) {
       case 0:
-        endChimes()
+        endShaman()
         break
       case 1:
-        endShaman()
+        endChimes()
         break
       case 2:
         endCoffee()
         break
       case 3:
-        endCosmic()
+        end128()
         break
       case 4:
         endWithyou()
         break
       case 5:
-        endBeatless()
+        endCosmic()
         break
       case 6:
-        end128()
+        endBeatless()
         break
     }
   }
@@ -125,14 +125,31 @@ export default class HomeScreen extends React.Component {
     this.setState({ mode: index })
   }
 
+  getText (index) {
+    switch (index) {
+      case 0:
+        return 'Shaman Drumming'
+      case 1:
+        return 'Wind Chimes'
+      case 2:
+        return 'Coffee'
+      case 3:
+        return 'Melancholy' // 128
+      case 4:
+        return 'Univeral Being'
+      case 5:
+        return 'Cosmic Connection'
+      case 6:
+        return 'Distant Waves' // beatless
+    }
+  }
+
   render() {
     var date = new Date(null)
     date.setSeconds(this.state.timerValue)
     const timeLeft = date.toISOString().substr(11, 8)
     const minutesLeft = parseInt(date.toISOString().substr(14, 2))
     // const percentLeft = 100 - Math.floor(100/(this.state.pauseDuration * 60) * this.state.timerValue)
-    const blurIn = 128
-    const blurOut = 0
     return (
       <View style={styles.container}>
         <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
@@ -149,81 +166,74 @@ export default class HomeScreen extends React.Component {
               paginationStyle={styles.dots}
               onIndexChanged={(index) => this.onModeChange(index)}
             >
-              <View style={styles.modeView}>
-                <Image
-                  // Chimes
-                  // Photo by Suresh Kumar
-                  style={styles.modeImage}
-                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
-                  source={require('../assets/images/chimes.jpg')}
-                />
-                <Chimes />
-              </View>
               <View style={styles.modeView}> 
                 <Image
                   // Shaman
                   // Photo by Paul Zoetemeijer
                   style={styles.modeImage}
-                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
                   source={require('../assets/images/shaman.jpg')}
                 />
                 <Shaman />
               </View>
               <View style={styles.modeView}>
                 <Image
+                  // Chimes
+                  // Photo by Suresh Kumar
+                  style={styles.modeImage}
+                  source={require('../assets/images/chimes.jpg')}
+                />
+                <Chimes />
+              </View>
+              <View style={styles.modeView}>
+                <Image
                   // Coffee
                   // Photo by Nathan Dumlao
                   style={styles.modeImage}
-                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
                   source={require('../assets/images/coffee.jpg')}
                 />
                 <Coffee />
               </View>
               <View style={styles.modeView}>
                 <Image
-                  // Cosmic
-                  // Photo by James Kresser
+                  // 128
+                  // Photo by 
                   style={styles.modeImage}
-                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
-                  source={require('../assets/images/cosmic.jpg')}
+                  source={require('../assets/images/128.jpg')}
                 />
-                <Cosmic />
+                <OneTwoEight />
               </View>
               <View style={styles.modeView}>
                 <Image
                   // Withyou
                   // Photo by Tylex Nix
                   style={styles.modeImage}
-                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
                   source={require('../assets/images/withyou.jpg')}
                 />
                 <Withyou />
               </View>
               <View style={styles.modeView}>
                 <Image
+                  // Cosmic
+                  // Photo by James Kresser
+                  style={styles.modeImage}
+                  source={require('../assets/images/cosmic.jpg')}
+                />
+                <Cosmic />
+              </View>
+              <View style={styles.modeView}>
+                <Image
                   // Beatless
                   // Photo by 
                   style={styles.modeImage}
-                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
                   source={require('../assets/images/beatless.jpg')}
                 />
                 <Beatless />
               </View>
-              <View style={styles.modeView}>
-                <Image
-                  // 128
-                  // Photo by 
-                  style={styles.modeImage}
-                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
-                  source={require('../assets/images/128.jpg')}
-                />
-                <OneTwoEight />                
-              </View>
             </Swiper>
-            { this.state.pauseActive && <TimerDisplay duration={this.state.pauseDuration} value={minutesLeft} /> }
+            {/* this.state.pauseActive && <TimerDisplay duration={this.state.pauseDuration} value={minutesLeft} /> */}
             <View style={styles.timerContainer}>
               <RegularText style={styles.duration}>
-                {this.state.pauseActive ? 'Time left' : 'Pause Duration'}
+                {this.state.pauseActive ? 'Time left' : this.getText(this.state.mode)}
               </RegularText>
               <BoldText style={styles.titleText}>
                {this.state.pauseActive ? timeLeft : this.state.pauseDuration + ' minutes'}
@@ -316,5 +326,5 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: '80%'
-  },
+  }
 })
