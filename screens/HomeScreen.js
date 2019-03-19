@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, Image, Slider, StyleSheet, Text, View, WebView } from 'react-native'
+import { ScrollView, Image, Slider, StyleSheet, Text, View } from 'react-native'
 import { LinearGradient, Haptic, WebBrowser, KeepAwake, Video } from 'expo'
 import Swiper from 'react-native-swiper'
 
@@ -10,12 +10,15 @@ import Colors from '../constants/Colors'
 import { RegularText, BoldText } from '../components/StyledText'
 import { MaterialIcons } from '@expo/vector-icons'
 
+import { TimerDisplay } from '../components/TimerDisplay'
 import { BreakTimer } from '../components/BreakTimer'
 import { Chimes, playChimes, endChimes } from '../components/Chimes'
 import { Shaman, playShaman, endShaman } from '../components/Shaman'
 import { Coffee, playCoffee, endCoffee } from '../components/Coffee'
 import { Cosmic, playCosmic, endCosmic} from '../components/Cosmic'
 import { Withyou, playWithyou, endWithyou } from '../components/Withyou'
+import { Beatless, playBeatless, endBeatless } from '../components/Beatless'
+import { OneTwoEight, play128, end128 } from '../components/OneTwoEight'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -83,6 +86,12 @@ export default class HomeScreen extends React.Component {
       case 4:
         playWithyou()
         break
+      case 5:
+        playBeatless()
+        break
+      case 6:
+        play128()
+        break
     }
   }
 
@@ -103,6 +112,12 @@ export default class HomeScreen extends React.Component {
       case 4:
         endWithyou()
         break
+      case 5:
+        endBeatless()
+        break
+      case 6:
+        end128()
+        break
     }
   }
 
@@ -114,7 +129,10 @@ export default class HomeScreen extends React.Component {
     var date = new Date(null)
     date.setSeconds(this.state.timerValue)
     const timeLeft = date.toISOString().substr(11, 8)
+    const minutesLeft = parseInt(date.toISOString().substr(14, 2))
     // const percentLeft = 100 - Math.floor(100/(this.state.pauseDuration * 60) * this.state.timerValue)
+    const blurIn = 128
+    const blurOut = 0
     return (
       <View style={styles.container}>
         <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
@@ -136,6 +154,7 @@ export default class HomeScreen extends React.Component {
                   // Chimes
                   // Photo by Suresh Kumar
                   style={styles.modeImage}
+                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
                   source={require('../assets/images/chimes.jpg')}
                 />
                 <Chimes />
@@ -145,6 +164,7 @@ export default class HomeScreen extends React.Component {
                   // Shaman
                   // Photo by Paul Zoetemeijer
                   style={styles.modeImage}
+                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
                   source={require('../assets/images/shaman.jpg')}
                 />
                 <Shaman />
@@ -154,6 +174,7 @@ export default class HomeScreen extends React.Component {
                   // Coffee
                   // Photo by Nathan Dumlao
                   style={styles.modeImage}
+                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
                   source={require('../assets/images/coffee.jpg')}
                 />
                 <Coffee />
@@ -163,6 +184,7 @@ export default class HomeScreen extends React.Component {
                   // Cosmic
                   // Photo by James Kresser
                   style={styles.modeImage}
+                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
                   source={require('../assets/images/cosmic.jpg')}
                 />
                 <Cosmic />
@@ -172,11 +194,33 @@ export default class HomeScreen extends React.Component {
                   // Withyou
                   // Photo by Tylex Nix
                   style={styles.modeImage}
+                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
                   source={require('../assets/images/withyou.jpg')}
                 />
                 <Withyou />
               </View>
+              <View style={styles.modeView}>
+                <Image
+                  // Beatless
+                  // Photo by 
+                  style={styles.modeImage}
+                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
+                  source={require('../assets/images/beatless.jpg')}
+                />
+                <Beatless />
+              </View>
+              <View style={styles.modeView}>
+                <Image
+                  // 128
+                  // Photo by 
+                  style={styles.modeImage}
+                  blurRadius={this.state.pauseActive ? blurIn : blurOut}
+                  source={require('../assets/images/128.jpg')}
+                />
+                <OneTwoEight />                
+              </View>
             </Swiper>
+            { this.state.pauseActive && <TimerDisplay duration={this.state.pauseDuration} value={minutesLeft} /> }
             <View style={styles.timerContainer}>
               <RegularText style={styles.duration}>
                 {this.state.pauseActive ? 'Time left' : 'Pause Duration'}
@@ -188,7 +232,7 @@ export default class HomeScreen extends React.Component {
                 style={styles.slider}
                 disabled={this.state.pauseActive}
                 minimumValue={1}
-                maximumValue={20}
+                maximumValue={30}
                 step={1}
                 onValueChange={this.updateDuration.bind(this)}
               />

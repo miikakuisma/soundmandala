@@ -33,10 +33,42 @@ export default class App extends React.Component {
     return Promise.all([
       Asset.loadAsync([
         require('./assets/images/logo.png'),
-        require('./assets/images/chimes.jpg'), // chime
-        require('./assets/images/shaman.jpg'), // drum
-        require('./assets/images/cosmic.jpg'), // cosmic
-        require('./assets/images/withyou.jpg') // withyou
+        require('./assets/images/chimes.jpg'),
+        require('./assets/images/shaman.jpg'),
+        require('./assets/images/cosmic.jpg'),
+        require('./assets/images/withyou.jpg'),
+        require('./assets/images/beatless.jpg'),
+        require('./assets/images/128.jpg'),
+        require('./assets/timer-images/1.png'),
+        require('./assets/timer-images/2.png'),
+        require('./assets/timer-images/3.png'),
+        require('./assets/timer-images/4.png'),
+        require('./assets/timer-images/5.png'),
+        require('./assets/timer-images/6.png'),
+        require('./assets/timer-images/7.png'),
+        require('./assets/timer-images/8.png'),
+        require('./assets/timer-images/9.png'),
+        require('./assets/timer-images/10.png'),
+        require('./assets/timer-images/11.png'),
+        require('./assets/timer-images/12.png'),
+        require('./assets/timer-images/13.png'),
+        require('./assets/timer-images/14.png'),
+        require('./assets/timer-images/15.png'),
+        require('./assets/timer-images/16.png'),
+        require('./assets/timer-images/17.png'),
+        require('./assets/timer-images/18.png'),
+        require('./assets/timer-images/19.png'),
+        require('./assets/timer-images/20.png'),
+        require('./assets/timer-images/21.png'),
+        require('./assets/timer-images/22.png'),
+        require('./assets/timer-images/23.png'),
+        require('./assets/timer-images/24.png'),
+        require('./assets/timer-images/25.png'),
+        require('./assets/timer-images/26.png'),
+        require('./assets/timer-images/27.png'),
+        require('./assets/timer-images/28.png'),
+        require('./assets/timer-images/29.png'),
+        require('./assets/timer-images/30.png')
       ]),
       Font.loadAsync({
         // This is the font that we are using for our tab bar
