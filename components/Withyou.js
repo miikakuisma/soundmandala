@@ -1,6 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
-import { setupAudio } from './utils'
+import { setupAudio, fadeIn } from './utils'
 import { audioConfig } from '../assets/audio/withyou'
 
 // Audio loop player
@@ -26,7 +26,9 @@ export async function endWithyou () {
 async function triggerSound (sound) {
   await audioConfig[sound].audioObject.stopAsync()
   await audioConfig[sound].audioObject.setIsLoopingAsync(true)
+  await audioConfig[sound].audioObject.setVolumeAsync(0)
   await audioConfig[sound].audioObject.playAsync()
+  fadeIn(audioConfig[sound].audioObject)
 }
 
 export class Withyou extends React.Component {

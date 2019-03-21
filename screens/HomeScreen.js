@@ -132,13 +132,13 @@ export default class HomeScreen extends React.Component {
       case 1:
         return 'Wind Chimes'
       case 2:
-        return 'Dripping'
+        return 'Dripping' // coffee
       case 3:
         return 'Melankolina' // 128
       case 4:
         return 'With You' // with you
       case 5:
-        return 'Antenna'
+        return 'Antenna' // peruvian
       case 6:
         return 'Distant Waves' // beatless
     }
@@ -154,7 +154,7 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
         <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
           <View style={styles.container} contentContainerStyle={styles.contentContainer}>
-            <Image source={require('../assets/images/logo.png')} style={styles.miikalogo} />
+            {/* <Image source={require('../assets/images/logo.png')} style={styles.miikalogo} /> */}
             <Swiper
               style={styles.swiper}
               loop={false}
@@ -234,7 +234,7 @@ export default class HomeScreen extends React.Component {
             {/* this.state.pauseActive && <TimerDisplay duration={this.state.pauseDuration} value={minutesLeft} /> */}
             <View style={styles.timerContainer}>
               <RegularText style={styles.duration}>
-                {this.state.pauseActive ? 'Time left' : this.getText(this.state.mode)}
+                {this.state.pauseActive ? 'Close Your Eyes..' : this.getText(this.state.mode)}
               </RegularText>
               <BoldText style={styles.titleText}>
                {this.state.pauseActive ? timeLeft : this.state.pauseDuration + ' minutes'}

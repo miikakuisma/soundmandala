@@ -99,7 +99,7 @@ export class BreakTimer extends React.Component {
       return <View style={styles.cancelButton}>
         <Button
           onPress={this.handleCancel.bind(this)}
-          title='Cancel'
+          title='STOP'
           color='#fff'
         />
       </View>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   // }
   startButton: {
     flex: 1,
-    width: Layout.window.width - 20,
+    width: '80%',
     justifyContent: 'center',
     margin: 15,
     color: '#000',
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     flex: 1,
-    width: Layout.window.width - 20,
+    width: '80%',
     justifyContent: 'center',
     margin: 15,
     color: '#000',

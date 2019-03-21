@@ -26,3 +26,16 @@ export async function setupAudio (audioConfig) {
     }
   })
 }
+
+export function fadeIn (audioObject) {
+  let volume = 0
+  this.fader = setInterval(() => {
+    if (volume.toFixed(1) < 1.0) {
+      volume = volume + 0.01
+      audioObject.setVolumeAsync(volume)
+    } else {
+      audioObject.setVolumeAsync(1)
+      clearInterval(this.fader)
+    }
+  }, 50)
+}
