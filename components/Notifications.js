@@ -2,6 +2,7 @@ import { Platform } from 'react-native'
 import { Notifications, Permissions } from 'expo'
 
 let timerEndedNotificationID
+let comeBackNotificationID
 
 export async function getiOSNotificationPermission () {
   const { status } = await Permissions.getAsync(
@@ -73,10 +74,10 @@ export function createComeBackNotification (minutes) {
     localNotification,
     schedulingOptions
   ).then((response) => {
-    timerEndedNotificationID = response
+    comeBackNotificationID = response
   })
 }
 
 export function cancelComeBackNotification () {
-  Notifications.cancelScheduledNotificationAsync(timerEndedNotificationID)
+  Notifications.cancelScheduledNotificationAsync(comeBackNotificationID)
 }

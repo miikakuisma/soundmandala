@@ -41,6 +41,9 @@ export class BreakTimer extends React.Component {
   _handleAppStateChange = (nextAppState) => {
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
       // Coming back to the app
+      if (!this.state.running && this.state.completed) {
+        cancelComeBackNotification()
+      }
       const timeAway = Date.now() - leftAppTimestamp
       const updatedTimerValue = leftAppTimerValue - Math.round(timeAway/1000)
       this.setState({ timerValue: updatedTimerValue })
@@ -51,7 +54,7 @@ export class BreakTimer extends React.Component {
       leftAppTimerValue = this.state.timerValue
       // If session ended and user leaves, let's ask to come back after 28 minutes
       if (!this.state.running && this.state.completed) {
-        createComeBackNotification(45)
+        createComeBackNotification(1)
       }     
     }
     this.setState({appState: nextAppState})
@@ -59,6 +62,7 @@ export class BreakTimer extends React.Component {
 
   handleStart () {
     this.setState({
+      completed: false,
       timerValue: this.props.duration * 60
     })
     this.startSession()
