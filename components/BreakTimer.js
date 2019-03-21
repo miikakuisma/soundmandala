@@ -2,6 +2,10 @@ import React from 'react'
 import { AppState, StyleSheet, View, Text, Button } from 'react-native'
 import Colors from '../constants/Colors'
 import Layout from '../constants/Layout'
+import {
+  createComeBackNotification,
+  cancelComeBackNotification
+} from '../components/Notifications'
 
 let leftAppTimestamp
 let leftAppTimerValue
@@ -36,13 +40,19 @@ export class BreakTimer extends React.Component {
 
   _handleAppStateChange = (nextAppState) => {
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      // Coming back to the app
       const timeAway = Date.now() - leftAppTimestamp
       const updatedTimerValue = leftAppTimerValue - Math.round(timeAway/1000)
       this.setState({ timerValue: updatedTimerValue })
     }
     if (nextAppState === 'inactive') {
+      // Leaving the app
       leftAppTimestamp = Date.now()
       leftAppTimerValue = this.state.timerValue
+      // If session ended and user leaves, let's ask to come back after 28 minutes
+      if (!this.state.running && this.state.completed) {
+        createComeBackNotification(45)
+      }     
     }
     this.setState({appState: nextAppState})
   }

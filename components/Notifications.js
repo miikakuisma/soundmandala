@@ -1,7 +1,7 @@
 import { Platform } from 'react-native'
 import { Notifications, Permissions } from 'expo'
 
-let notificationID
+let timerEndedNotificationID
 
 export async function getiOSNotificationPermission () {
   const { status } = await Permissions.getAsync(
@@ -21,7 +21,7 @@ export function listenForNotifications () {
   })
 }
 
-export function createNotification (minutes) {
+export function createTimerEndNotification (minutes) {
   const localNotification = {
     title: 'Sound Mandala',
     body: 'Timer finished',
@@ -43,10 +43,40 @@ export function createNotification (minutes) {
     localNotification,
     schedulingOptions
   ).then((response) => {
-    notificationID = response
+    timerEndedNotificationID = response
   })
 }
 
-export function cancelNotification () {
-  Notifications.cancelScheduledNotificationAsync(notificationID)
+export function cancelTimerEndNotification () {
+  Notifications.cancelScheduledNotificationAsync(timerEndedNotificationID)
+}
+
+export function createComeBackNotification (minutes) {
+  const localNotification = {
+    title: 'Sound Mandala',
+    body: 'Time to take a little break?',
+    data: {
+      somekey: 'some value'
+    },
+    android: {
+      sound: true
+    },
+    ios: {
+      sound: true
+    }
+  }
+  let sendAfter = Date.now()
+  sendAfter += minutes * 1000 * 60
+
+  const schedulingOptions = { time: sendAfter }
+  Notifications.scheduleLocalNotificationAsync(
+    localNotification,
+    schedulingOptions
+  ).then((response) => {
+    timerEndedNotificationID = response
+  })
+}
+
+export function cancelComeBackNotification () {
+  Notifications.cancelScheduledNotificationAsync(timerEndedNotificationID)
 }

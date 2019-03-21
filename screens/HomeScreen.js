@@ -3,14 +3,18 @@ import { ScrollView, Image, Slider, StyleSheet, Text, View } from 'react-native'
 import { LinearGradient, Haptic, WebBrowser, KeepAwake, Video } from 'expo'
 import Swiper from 'react-native-swiper'
 
-import { getiOSNotificationPermission, listenForNotifications, createNotification, cancelNotification } from '../components/Notifications'
+import {
+  getiOSNotificationPermission,
+  listenForNotifications,
+  createTimerEndNotification,
+  cancelTimerEndNotification
+} from '../components/Notifications'
 
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
 import { RegularText, BoldText } from '../components/StyledText'
 import { MaterialIcons } from '@expo/vector-icons'
 
-import { TimerDisplay } from '../components/TimerDisplay'
 import { BreakTimer } from '../components/BreakTimer'
 import { Chimes, playChimes, endChimes } from '../components/Chimes'
 import { Shaman, playShaman, endShaman } from '../components/Shaman'
@@ -43,14 +47,14 @@ export default class HomeScreen extends React.Component {
   startPause () {
     this.setState({ pauseActive: true })
     KeepAwake.activate()
-    createNotification(this.state.pauseDuration)
+    createTimerEndNotification(this.state.pauseDuration)
   }
 
   cancelPause () {
     this.setState({ pauseActive: false })
     this.endSequence()
     KeepAwake.deactivate()
-    cancelNotification()
+    cancelTimerEndNotification()
   }
 
   completedPause () {
@@ -132,15 +136,15 @@ export default class HomeScreen extends React.Component {
       case 1:
         return 'Wind Chimes'
       case 2:
-        return 'Dripping' // coffee
+        return '"Dripping Arpeggio"' // coffee
       case 3:
-        return 'Melankolina' // 128
+        return '"Dissolving Sadness"' // 128
       case 4:
-        return 'With You' // with you
+        return '"Healing Loneliness"' // with you
       case 5:
-        return 'Antenna' // peruvian
+        return '"Cosmic Broadcast"' // peruvian
       case 6:
-        return 'Distant Waves' // beatless
+        return '"Distant Shores"' // beatless
     }
   }
 
@@ -154,7 +158,6 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
         <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
           <View style={styles.container} contentContainerStyle={styles.contentContainer}>
-            {/* <Image source={require('../assets/images/logo.png')} style={styles.miikalogo} /> */}
             <Swiper
               style={styles.swiper}
               loop={false}
@@ -231,10 +234,9 @@ export default class HomeScreen extends React.Component {
                 <Beatless />
               </View>
             </Swiper>
-            {/* this.state.pauseActive && <TimerDisplay duration={this.state.pauseDuration} value={minutesLeft} /> */}
             <View style={styles.timerContainer}>
               <RegularText style={styles.duration}>
-                {this.state.pauseActive ? 'Close Your Eyes..' : this.getText(this.state.mode)}
+                {this.state.pauseActive ? 'Close Your Eyes?' : this.getText(this.state.mode)}
               </RegularText>
               <BoldText style={styles.titleText}>
                {this.state.pauseActive ? timeLeft : this.state.pauseDuration + ' minutes'}
@@ -288,14 +290,6 @@ const styles = StyleSheet.create({
     width: Layout.window.width,
     height: Layout.window.height,
     resizeMode: 'cover'
-  },
-  miikalogo: {
-    position: 'absolute',
-    bottom: 248,
-    zIndex: 2,
-    width: 64,
-    height: 64,
-    left: Layout.window.width / 2 - 32
   },
   title: {
     position: 'absolute',
