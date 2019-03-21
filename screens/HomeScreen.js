@@ -1,8 +1,7 @@
 import React from 'react'
-import { ScrollView, Image, Slider, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, Image, Slider, StyleSheet, Text, View, AsyncStorage } from 'react-native'
 import { LinearGradient, Haptic, WebBrowser, KeepAwake, Video } from 'expo'
 import Swiper from 'react-native-swiper'
-
 import {
   getiOSNotificationPermission,
   listenForNotifications,
@@ -39,9 +38,14 @@ export default class HomeScreen extends React.Component {
     }
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     getiOSNotificationPermission()
     listenForNotifications()
+    // AsyncStorage.clear()
+    this.setState({
+      storedIndex: parseInt(await AsyncStorage.getItem('mode')),
+      pauseDuration: parseInt(await AsyncStorage.getItem('pauseDuration')) || 3
+    })
   }
 
   startPause () {
@@ -125,8 +129,13 @@ export default class HomeScreen extends React.Component {
     }
   }
 
-  onModeChange (index) {
+  async onModeChange (index) {
     this.setState({ mode: index })
+    try {
+      await AsyncStorage.setItem('mode', index.toString())
+    } catch (error) {
+      // Error saving data
+    } 
   }
 
   getText (index) {
@@ -149,6 +158,7 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
+    console.log(this.state.storedIndex)
     var date = new Date(null)
     date.setSeconds(this.state.timerValue)
     const timeLeft = date.toISOString().substr(11, 8)
@@ -158,9 +168,10 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
         <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
           <View style={styles.container} contentContainerStyle={styles.contentContainer}>
-            <Swiper
+            { this.state.storedIndex && <Swiper
               style={styles.swiper}
               loop={false}
+              index={this.state.storedIndex}
               showsButtons={!this.state.pauseActive}
               prevButton={<MaterialIcons name="chevron-left" size={32} color="white" />}
               nextButton={<MaterialIcons name="chevron-right" size={32} color="white" />}
@@ -233,7 +244,7 @@ export default class HomeScreen extends React.Component {
                 />
                 <Beatless />
               </View>
-            </Swiper>
+            </Swiper> }
             <View style={styles.timerContainer}>
               <RegularText style={styles.duration}>
                 {this.state.pauseActive ? 'Close Your Eyes?' : this.getText(this.state.mode)}
@@ -246,8 +257,16 @@ export default class HomeScreen extends React.Component {
                 disabled={this.state.pauseActive}
                 minimumValue={1}
                 maximumValue={30}
+                value={this.state.pauseDuration}
                 step={1}
                 onValueChange={this.updateDuration.bind(this)}
+                onSlidingComplete={async () => {
+                  try {
+                    await AsyncStorage.setItem('pauseDuration', this.state.pauseDuration.toString());
+                  } catch (error) {
+                    // Error saving data
+                  }
+                }}
               />
               <BreakTimer
                 duration={this.state.pauseDuration}
