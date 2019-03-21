@@ -31,6 +31,7 @@ export default class HomeScreen extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      storedIndex: null,
       pauseDuration: 3,
       pauseActive: false,
       timerValue: null,
@@ -43,7 +44,7 @@ export default class HomeScreen extends React.Component {
     listenForNotifications()
     // AsyncStorage.clear()
     this.setState({
-      storedIndex: parseInt(await AsyncStorage.getItem('mode')),
+      storedIndex: parseInt(await AsyncStorage.getItem('mode')) || 0,
       pauseDuration: parseInt(await AsyncStorage.getItem('pauseDuration')) || 3
     })
   }
@@ -158,7 +159,6 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-    console.log(this.state.storedIndex)
     var date = new Date(null)
     date.setSeconds(this.state.timerValue)
     const timeLeft = date.toISOString().substr(11, 8)
@@ -168,10 +168,10 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
         <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
           <View style={styles.container} contentContainerStyle={styles.contentContainer}>
-            { this.state.storedIndex && <Swiper
+            <Swiper
               style={styles.swiper}
               loop={false}
-              index={this.state.storedIndex}
+              index={this.state.storedIndex || 1}
               showsButtons={!this.state.pauseActive}
               prevButton={<MaterialIcons name="chevron-left" size={32} color="white" />}
               nextButton={<MaterialIcons name="chevron-right" size={32} color="white" />}
@@ -244,7 +244,7 @@ export default class HomeScreen extends React.Component {
                 />
                 <Beatless />
               </View>
-            </Swiper> }
+            </Swiper>
             <View style={styles.timerContainer}>
               <RegularText style={styles.duration}>
                 {this.state.pauseActive ? 'Close Your Eyes?' : this.getText(this.state.mode)}
@@ -262,7 +262,7 @@ export default class HomeScreen extends React.Component {
                 onValueChange={this.updateDuration.bind(this)}
                 onSlidingComplete={async () => {
                   try {
-                    await AsyncStorage.setItem('pauseDuration', this.state.pauseDuration.toString());
+                    await AsyncStorage.setItem('pauseDuration', this.state.pauseDuration.toString())
                   } catch (error) {
                     // Error saving data
                   }
@@ -280,7 +280,7 @@ export default class HomeScreen extends React.Component {
           </View>
         </LinearGradient>
       </View>
-    );
+    )
   }
 }
 
