@@ -1,7 +1,8 @@
 import React from 'react'
-import { ScrollView, Image, Slider, StyleSheet, Text, View, AsyncStorage } from 'react-native'
+import { ScrollView, Image, TouchableOpacity, Slider, StyleSheet, Text, View, AsyncStorage } from 'react-native'
 import { LinearGradient, Haptic, WebBrowser, KeepAwake, Video } from 'expo'
-import Swiper from 'react-native-swiper'
+import Carousel, { Pagination } from 'react-native-snap-carousel'
+
 import {
   getiOSNotificationPermission,
   listenForNotifications,
@@ -18,10 +19,55 @@ import { BreakTimer } from '../components/BreakTimer'
 import { Chimes, playChimes, endChimes } from '../components/Chimes'
 import { Shaman, playShaman, endShaman } from '../components/Shaman'
 import { Coffee, playCoffee, endCoffee } from '../components/Coffee'
+import { OneTwoEight, play128, end128 } from '../components/OneTwoEight'
 import { Cosmic, playCosmic, endCosmic} from '../components/Cosmic'
 import { Withyou, playWithyou, endWithyou } from '../components/Withyou'
 import { Beatless, playBeatless, endBeatless } from '../components/Beatless'
-import { OneTwoEight, play128, end128 } from '../components/OneTwoEight'
+
+const themes = [
+  {
+    title: 'Shaman Drumming',
+    slug: 'shaman',
+    image: require('../assets/images/shaman.jpg'),
+    player: <Shaman />
+  },
+  {
+    title: 'Wind Chimes',
+    slug: 'chimes',
+    image: require('../assets/images/chimes.jpg'),
+    player: <Chimes />
+  },
+  {
+    title: '"Dripping Arpeggio"',
+    slug: 'coffee',
+    image: require('../assets/images/coffee.jpg'),
+    player: <Coffee />
+  },
+  {
+    title: '"Dissolving Sadness"',
+    slug: '128',
+    image: require('../assets/images/128.jpg'),
+    player: <OneTwoEight />
+  },
+  {
+    title: '"Healing Loneliness"',
+    slug: 'withyou',
+    image: require('../assets/images/withyou.jpg'),
+    player: <Withyou />
+  },
+  {
+    title: '"Cosmic Broadcast"',
+    slug: 'cosmic',
+    image: require('../assets/images/cosmic.jpg'),
+    player: <Cosmic />
+  },
+  {
+    title: '"Distant Shores"',
+    slug: 'beatless',
+    image: require('../assets/images/beatless.jpg'),
+    player: <Beatless />
+  }
+]
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -132,30 +178,23 @@ export default class HomeScreen extends React.Component {
 
   async onModeChange (index) {
     this.setState({ mode: index })
+    if (!this.state.launched) {
+      this.setState({ launched: true })
+      return
+    }
     try {
+      console.log('stored mode ', index.toString())
       await AsyncStorage.setItem('mode', index.toString())
     } catch (error) {
       // Error saving data
     } 
   }
 
-  getText (index) {
-    switch (index) {
-      case 0:
-        return 'Shaman Drumming'
-      case 1:
-        return 'Wind Chimes'
-      case 2:
-        return '"Dripping Arpeggio"' // coffee
-      case 3:
-        return '"Dissolving Sadness"' // 128
-      case 4:
-        return '"Healing Loneliness"' // with you
-      case 5:
-        return '"Cosmic Broadcast"' // peruvian
-      case 6:
-        return '"Distant Shores"' // beatless
-    }
+  renderItem ({item, index}) {
+    return <View style={styles.modeView}>
+      <Image style={styles.modeImage} source={item.image} />
+      {item.player}
+    </View>
   }
 
   render() {
@@ -164,90 +203,29 @@ export default class HomeScreen extends React.Component {
     const timeLeft = date.toISOString().substr(11, 8)
     const minutesLeft = parseInt(date.toISOString().substr(14, 2))
     // const percentLeft = 100 - Math.floor(100/(this.state.pauseDuration * 60) * this.state.timerValue)
-    return (
-      <View style={styles.container}>
-        <LinearGradient colors={[Colors.blue, Colors.beige, Colors.orangeLight]} style={{width: '100%', height: '100%'}}>
+    if (this.state.storedIndex !== null) {
+      return (
+        <View style={styles.container}>
           <View style={styles.container} contentContainerStyle={styles.contentContainer}>
-            <Swiper
-              style={styles.swiper}
-              loop={false}
-              index={this.state.storedIndex || 1}
-              showsButtons={!this.state.pauseActive}
-              prevButton={<MaterialIcons name="chevron-left" size={32} color="white" />}
-              nextButton={<MaterialIcons name="chevron-right" size={32} color="white" />}
-              scrollEnabled={!this.state.pauseActive}
-              showsPagination={!this.state.pauseActive}
-              activeDotColor='#fff'
-              paginationStyle={styles.dots}
-              onIndexChanged={(index) => this.onModeChange(index)}
-            >
-              <View style={styles.modeView}> 
-                <Image
-                  // Shaman
-                  // Photo by Paul Zoetemeijer
-                  style={styles.modeImage}
-                  source={require('../assets/images/shaman.jpg')}
-                />
-                <Shaman />
-              </View>
-              <View style={styles.modeView}>
-                <Image
-                  // Chimes
-                  // Photo by Suresh Kumar
-                  style={styles.modeImage}
-                  source={require('../assets/images/chimes.jpg')}
-                />
-                <Chimes />
-              </View>
-              <View style={styles.modeView}>
-                <Image
-                  // Coffee
-                  // Photo by Nathan Dumlao
-                  style={styles.modeImage}
-                  source={require('../assets/images/coffee.jpg')}
-                />
-                <Coffee />
-              </View>
-              <View style={styles.modeView}>
-                <Image
-                  // 128
-                  // Photo by 
-                  style={styles.modeImage}
-                  source={require('../assets/images/128.jpg')}
-                />
-                <OneTwoEight />
-              </View>
-              <View style={styles.modeView}>
-                <Image
-                  // Withyou
-                  // Photo by Tylex Nix
-                  style={styles.modeImage}
-                  source={require('../assets/images/withyou.jpg')}
-                />
-                <Withyou />
-              </View>
-              <View style={styles.modeView}>
-                <Image
-                  // Cosmic
-                  // Photo by James Kresser
-                  style={styles.modeImage}
-                  source={require('../assets/images/cosmic.jpg')}
-                />
-                <Cosmic />
-              </View>
-              <View style={styles.modeView}>
-                <Image
-                  // Beatless
-                  // Photo by 
-                  style={styles.modeImage}
-                  source={require('../assets/images/beatless.jpg')}
-                />
-                <Beatless />
-              </View>
-            </Swiper>
+            <Carousel
+              ref={c => this._carousel = c}
+              data={themes}
+              renderItem={this.renderItem}
+              windowSize={1}
+              sliderWidth={Layout.window.width}
+              itemWidth={Layout.window.width}
+              inactiveSlideScale={0.8}
+              enableSnap={true}
+              useScrollView={true}
+              contentContainerCustomStyle={styles.swiper}
+              loop={true}
+              autoplay={false}
+              onSnapToItem={(index) => this.onModeChange(index)}
+              firstItem={this.state.storedIndex}
+            />
             <View style={styles.timerContainer}>
               <RegularText style={styles.duration}>
-                {this.state.pauseActive ? 'Close Your Eyes?' : this.getText(this.state.mode)}
+                {this.state.pauseActive ? 'Close Your Eyes?' : themes[this.state.mode].title}
               </RegularText>
               <BoldText style={styles.titleText}>
                {this.state.pauseActive ? timeLeft : this.state.pauseDuration + ' minutes'}
@@ -278,15 +256,18 @@ export default class HomeScreen extends React.Component {
               />
             </View>
           </View>
-        </LinearGradient>
-      </View>
-    )
+        </View>
+      )      
+    } else {
+      return <Image style={styles.modeImage} source={require('../assets/images/splash.png')} />
+    }
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: Colors.black
   },
   swiper: {
     alignItems: 'center'
