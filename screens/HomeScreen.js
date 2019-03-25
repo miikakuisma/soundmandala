@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, Image, TouchableOpacity, Slider, StyleSheet, Text, View, AsyncStorage } from 'react-native'
+import { ScrollView, Image, ImageBackground, Slider, StyleSheet, Text, View, AsyncStorage } from 'react-native'
 import { LinearGradient, Haptic, WebBrowser, KeepAwake, Video } from 'expo'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 
@@ -77,10 +77,10 @@ export default class HomeScreen extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      storedIndex: null,
-      pauseDuration: 3,
-      pauseActive: false,
-      timerValue: null,
+      storedIndex: null, // the first slide to show on carousel
+      pauseDuration: 3, // minutes
+      pauseActive: false, // is timer running
+      timerValue: null, // value in the timer right now
       mode: 0 // 0 = chimes | 1 = shaman etc
     }
   }
@@ -178,12 +178,8 @@ export default class HomeScreen extends React.Component {
 
   async onModeChange (index) {
     this.setState({ mode: index })
-    if (!this.state.launched) {
-      this.setState({ launched: true })
-      return
-    }
+    // Store the value to be recalled next time
     try {
-      console.log('stored mode ', index.toString())
       await AsyncStorage.setItem('mode', index.toString())
     } catch (error) {
       // Error saving data
@@ -206,56 +202,59 @@ export default class HomeScreen extends React.Component {
     if (this.state.storedIndex !== null) {
       return (
         <View style={styles.container}>
-          <View style={styles.container} contentContainerStyle={styles.contentContainer}>
-            <Carousel
-              ref={c => this._carousel = c}
-              data={themes}
-              renderItem={this.renderItem}
-              windowSize={1}
-              sliderWidth={Layout.window.width}
-              itemWidth={Layout.window.width}
-              inactiveSlideScale={0.8}
-              enableSnap={true}
-              useScrollView={true}
-              contentContainerCustomStyle={styles.swiper}
-              loop={true}
-              autoplay={false}
-              onSnapToItem={(index) => this.onModeChange(index)}
-              firstItem={this.state.storedIndex}
-            />
-            <View style={styles.timerContainer}>
-              <RegularText style={styles.duration}>
-                {this.state.pauseActive ? 'Close Your Eyes?' : themes[this.state.mode].title}
-              </RegularText>
-              <BoldText style={styles.titleText}>
-               {this.state.pauseActive ? timeLeft : this.state.pauseDuration + ' minutes'}
-              </BoldText>
-              <Slider
-                style={styles.slider}
-                disabled={this.state.pauseActive}
-                minimumValue={1}
-                maximumValue={30}
-                value={this.state.pauseDuration}
-                step={1}
-                onValueChange={this.updateDuration.bind(this)}
-                onSlidingComplete={async () => {
-                  try {
-                    await AsyncStorage.setItem('pauseDuration', this.state.pauseDuration.toString())
-                  } catch (error) {
-                    // Error saving data
-                  }
-                }}
+          <ImageBackground source={require('../assets/images/background.jpg')} style={styles.container}>
+            <View style={styles.container} contentContainerStyle={styles.contentContainer}>
+              <Carousel
+                ref={c => this._carousel = c}
+                data={themes}
+                renderItem={this.renderItem}
+                windowSize={1}
+                sliderWidth={Layout.window.width}
+                itemWidth={Layout.window.width}
+                inactiveSlideScale={0.8}
+                enableSnap={true}
+                useScrollView={true}
+                contentContainerCustomStyle={styles.swiper}
+                loop={true}
+                autoplay={false}
+                onSnapToItem={(index) => this.onModeChange(index)}
+                firstItem={this.state.storedIndex}
               />
-              <BreakTimer
-                duration={this.state.pauseDuration}
-                autorun={false}
-                onStart={this.startPause.bind(this)}
-                onUpdate={this.onTimerUpdate.bind(this)}
-                onCancel={this.cancelPause.bind(this)}
-                onCompleted={this.completedPause.bind(this)}
-              />
+              <View style={styles.timerContainer}>
+                <RegularText style={styles.duration}>
+                  {this.state.pauseActive ? 'Close Your Eyes?' : themes[this.state.mode].title}
+                </RegularText>
+                <BoldText style={styles.titleText}>
+                 {this.state.pauseActive ? timeLeft : this.state.pauseDuration + ' minutes'}
+                </BoldText>
+                <Slider
+                  style={styles.slider}
+                  disabled={this.state.pauseActive}
+                  minimumValue={1}
+                  maximumValue={30}
+                  value={this.state.pauseDuration}
+                  step={1}
+                  onValueChange={this.updateDuration.bind(this)}
+                  onSlidingComplete={async () => {
+                    // Store the value to be recalled next time
+                    try {
+                      await AsyncStorage.setItem('pauseDuration', this.state.pauseDuration.toString())
+                    } catch (error) {
+                      // Error saving data
+                    }
+                  }}
+                />
+                <BreakTimer
+                  duration={this.state.pauseDuration}
+                  autorun={false}
+                  onStart={this.startPause.bind(this)}
+                  onUpdate={this.onTimerUpdate.bind(this)}
+                  onCancel={this.cancelPause.bind(this)}
+                  onCompleted={this.completedPause.bind(this)}
+                />
+              </View>
             </View>
-          </View>
+          </ImageBackground>
         </View>
       )      
     } else {
@@ -267,7 +266,7 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.black
+    backgroundColor: '#000'
   },
   swiper: {
     alignItems: 'center'
