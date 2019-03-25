@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, Image, ImageBackground, Slider, StyleSheet, Text, View, AsyncStorage } from 'react-native'
+import { ScrollView, Image, TouchableOpacity, ImageBackground, Slider, StyleSheet, Text, View, AsyncStorage } from 'react-native'
 import { LinearGradient, Haptic, WebBrowser, KeepAwake, Video } from 'expo'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 
@@ -204,6 +204,7 @@ export default class HomeScreen extends React.Component {
         <View style={styles.container}>
           <ImageBackground source={require('../assets/images/background.jpg')} style={styles.container}>
             <View style={styles.container} contentContainerStyle={styles.contentContainer}>
+              { this.state.pauseActive && <TouchableOpacity style={styles.carouselBlocker} /> }
               <Carousel
                 ref={c => this._carousel = c}
                 data={themes}
@@ -270,6 +271,16 @@ const styles = StyleSheet.create({
   },
   swiper: {
     alignItems: 'center'
+  },
+  carouselBlocker: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 250,
+    zIndex: 2,
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0)'
   },
   dots: {
     position: 'absolute',
