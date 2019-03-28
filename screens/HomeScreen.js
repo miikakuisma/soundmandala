@@ -89,12 +89,20 @@ export default class HomeScreen extends React.Component {
   async componentDidMount () {
     getiOSNotificationPermission()
     listenForNotifications()
-    // AsyncStorage.clear()
+    this.handleVersionChange()
     this.setState({
       onboarded: await AsyncStorage.getItem('onboarded'),
       storedIndex: parseInt(await AsyncStorage.getItem('mode')) || 0,
       pauseDuration: parseInt(await AsyncStorage.getItem('pauseDuration')) || 3
     })
+  }
+
+  handleVersionChange () {
+    let pkg = require('../app.json')
+    console.log('App version: ', pkg.expo.version)
+    // if (pkg.expo.version <= '1.0.5') {
+    //   AsyncStorage.clear()
+    // }
   }
 
   startPause () {
