@@ -77,6 +77,7 @@ export default class HomeScreen extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      onboarded: null,
       storedIndex: null, // the first slide to show on carousel
       pauseDuration: 3, // minutes
       pauseActive: false, // is timer running
@@ -90,6 +91,7 @@ export default class HomeScreen extends React.Component {
     listenForNotifications()
     // AsyncStorage.clear()
     this.setState({
+      onboarded: await AsyncStorage.getItem('onboarded'),
       storedIndex: parseInt(await AsyncStorage.getItem('mode')) || 0,
       pauseDuration: parseInt(await AsyncStorage.getItem('pauseDuration')) || 3
     })
@@ -193,6 +195,16 @@ export default class HomeScreen extends React.Component {
     </View>
   }
 
+  async onboardingDone () {
+    this.setState({ onboarded: 'done' })
+    console.log('done')
+    try {
+      await AsyncStorage.setItem('onboarded', 'done')
+    } catch (error) {
+      // Error saving data
+    }
+  }
+
   render() {
     var date = new Date(null)
     date.setSeconds(this.state.timerValue)
@@ -202,6 +214,13 @@ export default class HomeScreen extends React.Component {
     if (this.state.storedIndex !== null) {
       return (
         <View style={styles.container}>
+          { this.state.onboarded !== 'done' && <TouchableOpacity
+            activeOpacity={0.9}
+            style={styles.onboarding}
+            onPress={this.onboardingDone.bind(this)}
+          >
+            <ImageBackground source={require('../assets/images/onboarding.png')} style={styles.onboardingImg} />
+          </TouchableOpacity> }
           <ImageBackground source={require('../assets/images/background.jpg')} style={styles.container}>
             <View style={styles.container} contentContainerStyle={styles.contentContainer}>
               { this.state.pauseActive && <TouchableOpacity style={styles.carouselBlocker} /> }
@@ -268,6 +287,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000'
+  },
+  onboarding: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 3
+  },
+  onboardingImg: {
+    flex: 1
   },
   swiper: {
     alignItems: 'center'
