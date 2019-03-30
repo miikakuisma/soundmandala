@@ -54,7 +54,7 @@ export class BreakTimer extends React.Component {
       leftAppTimerValue = this.state.timerValue
       // If session ended and user leaves, let's ask to come back after 28 minutes
       if (!this.state.running && this.state.completed) {
-        createComeBackNotification(1)
+        createComeBackNotification(45)
       }
     }
     this.setState({appState: nextAppState})
