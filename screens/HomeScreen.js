@@ -2,20 +2,13 @@ import React from 'react'
 import { ScrollView, Image, TouchableOpacity, ImageBackground, Slider, Switch, StyleSheet, Text, View, AsyncStorage } from 'react-native'
 import { LinearGradient, Haptic, WebBrowser, KeepAwake, Video } from 'expo'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
-
-import {
-  getiOSNotificationPermission,
-  listenForNotifications,
-  createTimerEndNotification,
-  cancelTimerEndNotification
-} from '../components/Notifications'
-
+import { getiOSNotificationPermission, listenForNotifications, createTimerEndNotification, cancelTimerEndNotification } from '../components/Notifications'
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
-import { RegularText, BoldText } from '../components/utils'
-import Settings from '../components/Settings'
 import { MaterialIcons } from '@expo/vector-icons'
+import { RegularText, BoldText } from '../components/utils'
 import { themes, playSequence, endSequence } from '../themes' // Array of theme config
+import Settings from '../components/Settings'
 import { BreakTimer } from '../components/BreakTimer'
 
 export default class HomeScreen extends React.Component {
@@ -26,15 +19,15 @@ export default class HomeScreen extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      onboarded: null,
-      settingsVisible: false,
-      reminderEnabled: true,
-      reminderAfter: 45,
+      onboarded: null, // Has user seen instructions to swipe themes
+      settingsVisible: false, // Is settings screen visible
+      reminderEnabled: true, // Break reminder notifcations turned on?
+      reminderAfter: 45, // How many minutes to wait by default for next break
       storedIndex: null, // the first slide to show on carousel
-      pauseDuration: 3, // minutes
+      pauseDuration: 3, // timer value in minutes
       pauseActive: false, // is timer running
       timerValue: null, // value in the timer right now
-      mode: 0 // 0 = chimes | 1 = shaman etc
+      mode: 0 // 0 = chimes | 1 = shaman etc (refactor to "theme"?)
     }
   }
 
@@ -136,7 +129,6 @@ export default class HomeScreen extends React.Component {
   }
 
   async updateReminderValue (value) {
-    console.log(value)
     try {
       if (!this.state.reminderEnabled) {
         await AsyncStorage.setItem('reminderAfter', value.toString())
