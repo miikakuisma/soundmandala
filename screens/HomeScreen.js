@@ -165,12 +165,12 @@ export default class HomeScreen extends React.Component {
           >
             <ImageBackground source={require('../assets/images/onboarding.png')} style={styles.onboardingImg} />
           </TouchableOpacity> }
-          <TouchableOpacity
+          { !this.state.pauseActive && <TouchableOpacity
             onPress={this.toggleSettings.bind(this)}
             style={styles.settingsButton}
           >
             <MaterialIcons name='settings' size={32} color='#ccc' />
-          </TouchableOpacity>
+          </TouchableOpacity> }
           { this.state.settingsVisible && <Settings
             reminderEnabled={reminderEnabled}
             reminderAfter={this.state.reminderAfter}
