@@ -1,7 +1,8 @@
 import React from 'react'
-import { ScrollView, Image, TouchableOpacity, ImageBackground, Slider, StyleSheet, Text, View, AsyncStorage } from 'react-native'
+import { ScrollView, Image, TouchableOpacity, ImageBackground, Slider, Switch, StyleSheet, Text, View, AsyncStorage } from 'react-native'
 import { LinearGradient, Haptic, WebBrowser, KeepAwake, Video } from 'expo'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
+import NumericInput from 'react-native-numeric-input'
 
 import {
   getiOSNotificationPermission,
@@ -78,6 +79,9 @@ export default class HomeScreen extends React.Component {
     super(props)
     this.state = {
       onboarded: null,
+      settingsVisible: false,
+      reminderEnabled: true,
+      reminderAfter: 45,
       storedIndex: null, // the first slide to show on carousel
       pauseDuration: 3, // minutes
       pauseActive: false, // is timer running
@@ -90,10 +94,12 @@ export default class HomeScreen extends React.Component {
     getiOSNotificationPermission()
     listenForNotifications()
     this.handleVersionChange()
+    console.log(await AsyncStorage.getItem('reminderEnabled') === 'true')
     this.setState({
       onboarded: await AsyncStorage.getItem('onboarded'),
       storedIndex: parseInt(await AsyncStorage.getItem('mode')) || 0,
-      pauseDuration: parseInt(await AsyncStorage.getItem('pauseDuration')) || 3
+      pauseDuration: parseInt(await AsyncStorage.getItem('pauseDuration')) || 3,
+      reminderEnabled: await AsyncStorage.getItem('reminderEnabled') === 'true'
     })
   }
 
@@ -205,12 +211,35 @@ export default class HomeScreen extends React.Component {
 
   async onboardingDone () {
     this.setState({ onboarded: 'done' })
-    console.log('done')
     try {
       await AsyncStorage.setItem('onboarded', 'done')
     } catch (error) {
       // Error saving data
     }
+  }
+
+  toggleSettings () {
+    this.setState({ settingsVisible: !this.state.settingsVisible })
+  }
+
+  async toggleReminders () {
+    try {
+      if (!this.state.reminderEnabled) {
+        // console.log('setting reminder to: true')
+        this.setState({ reminderEnabled: true })
+        await AsyncStorage.setItem('reminderEnabled', 'true')
+      } else {
+        // console.log('setting reminder to: false')
+        this.setState({ reminderEnabled: false })
+        await AsyncStorage.setItem('reminderEnabled', 'false')
+      }
+    } catch (error) {
+      // Error saving data
+    }
+  }
+
+  updateReminderValue (value) {
+    this.setState({ reminderAfter: value })
   }
 
   render() {
@@ -229,6 +258,48 @@ export default class HomeScreen extends React.Component {
           >
             <ImageBackground source={require('../assets/images/onboarding.png')} style={styles.onboardingImg} />
           </TouchableOpacity> }
+          <TouchableOpacity
+            onPress={this.toggleSettings.bind(this)}
+            style={styles.settingsButton}
+          >
+            <MaterialIcons name='settings' size={32} color='#ccc' />
+          </TouchableOpacity>
+          { this.state.settingsVisible && <View style={styles.settings}>
+            <View style={styles.row}>
+              <Switch
+                value={this.state.reminderEnabled}
+                onValueChange={this.toggleReminders.bind(this)}
+              />
+              <BoldText style={styles.settingsLabel}>Break reminders</BoldText>
+            </View>
+            { this.state.reminderEnabled && <View style={{
+              padding: 20,
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <BoldText style={styles.settingsLabel}>
+                Reminder to take another break is triggered after a completed session. Set the interval below (minutes).
+                {'\n'}
+              </BoldText>
+              <NumericInput
+                minValue={1}
+                maxValue={180}
+                initValue={this.state.reminderAfter} 
+                onChange={this.updateReminderValue.bind(this)} 
+                totalHeight={48} 
+                iconSize={16}
+                step={1}
+                type='plus-minus'
+                valueType='integer'
+                rounded
+                editable
+                textColor='white'
+                iconStyle={{ color: 'white' }} 
+                leftButtonBackgroundColor='transparent'
+                rightButtonBackgroundColor='transparent'
+              />
+            </View> }
+          </View> }
           <ImageBackground source={require('../assets/images/background.jpg')} style={styles.container}>
             <View style={styles.container} contentContainerStyle={styles.contentContainer}>
               { this.state.pauseActive && <TouchableOpacity style={styles.carouselBlocker} /> }
@@ -275,6 +346,8 @@ export default class HomeScreen extends React.Component {
                 <BreakTimer
                   duration={this.state.pauseDuration}
                   autorun={false}
+                  reminderEnabled={this.state.reminderEnabled}
+                  reminderAfter={this.state.reminderAfter}
                   onStart={this.startPause.bind(this)}
                   onUpdate={this.onTimerUpdate.bind(this)}
                   onCancel={this.cancelPause.bind(this)}
@@ -306,6 +379,33 @@ const styles = StyleSheet.create({
   },
   onboardingImg: {
     flex: 1
+  },
+  settingsButton: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    zIndex: 9
+  },
+  settings: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 3,
+    padding: 40,
+    paddingTop: 150,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)'
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  settingsLabel: {
+    color: Colors.white,
+    fontSize: 16,
+    marginLeft: 10,
+    marginRight: 10
   },
   swiper: {
     alignItems: 'center'
