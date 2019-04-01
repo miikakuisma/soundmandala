@@ -278,7 +278,7 @@ export default class HomeScreen extends React.Component {
               justifyContent: 'center'
             }}>
               <BoldText style={styles.settingsLabel}>
-                Reminder to take another break is triggered after a completed session. Set the interval below (minutes).
+                Set here how many minutes to wait (after completed session) before break reminder notification.
                 {'\n'}
               </BoldText>
               <NumericInput
@@ -382,8 +382,8 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     position: 'absolute',
-    top: 50,
-    left: 20,
+    top: 60,
+    left: 30,
     zIndex: 9
   },
   settings: {
@@ -399,13 +399,15 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   settingsLabel: {
     color: Colors.white,
     fontSize: 16,
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
+    textAlign: 'center'
   },
   swiper: {
     alignItems: 'center'

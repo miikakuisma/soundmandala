@@ -41,7 +41,7 @@ export class BreakTimer extends React.Component {
   _handleAppStateChange = (nextAppState) => {
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
       // Coming back to the app
-      if (!this.state.running && this.state.completed) {
+      if (this.props.reminderEnabled && !this.state.running && this.state.completed) {
         cancelComeBackNotification()
       }
       const timeAway = Date.now() - leftAppTimestamp
