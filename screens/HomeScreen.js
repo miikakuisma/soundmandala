@@ -2,7 +2,6 @@ import React from 'react'
 import { ScrollView, Image, TouchableOpacity, ImageBackground, Slider, Switch, StyleSheet, Text, View, AsyncStorage } from 'react-native'
 import { LinearGradient, Haptic, WebBrowser, KeepAwake, Video } from 'expo'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
-import NumericInput from 'react-native-numeric-input'
 
 import {
   getiOSNotificationPermission,
@@ -13,62 +12,11 @@ import {
 
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
-import { RegularText, BoldText } from '../components/StyledText'
+import { RegularText, BoldText } from '../components/utils'
+import Settings from '../components/Settings'
 import { MaterialIcons } from '@expo/vector-icons'
-
+import { themes, playSequence, endSequence } from '../themes' // Array of theme config
 import { BreakTimer } from '../components/BreakTimer'
-import { Chimes, playChimes, endChimes } from '../components/Chimes'
-import { Shaman, playShaman, endShaman } from '../components/Shaman'
-import { Coffee, playCoffee, endCoffee } from '../components/Coffee'
-import { OneTwoEight, play128, end128 } from '../components/OneTwoEight'
-import { Cosmic, playCosmic, endCosmic} from '../components/Cosmic'
-import { Withyou, playWithyou, endWithyou } from '../components/Withyou'
-import { Beatless, playBeatless, endBeatless } from '../components/Beatless'
-
-const themes = [
-  {
-    title: 'Shaman Drumming',
-    slug: 'shaman',
-    image: require('../assets/images/shaman.jpg'),
-    player: <Shaman />
-  },
-  {
-    title: 'Wind Chimes',
-    slug: 'chimes',
-    image: require('../assets/images/chimes.jpg'),
-    player: <Chimes />
-  },
-  {
-    title: '"Dripping Arpeggio"',
-    slug: 'coffee',
-    image: require('../assets/images/coffee.jpg'),
-    player: <Coffee />
-  },
-  {
-    title: '"Dissolving Sadness"',
-    slug: '128',
-    image: require('../assets/images/128.jpg'),
-    player: <OneTwoEight />
-  },
-  {
-    title: '"Healing Loneliness"',
-    slug: 'withyou',
-    image: require('../assets/images/withyou.jpg'),
-    player: <Withyou />
-  },
-  {
-    title: '"Cosmic Broadcast"',
-    slug: 'cosmic',
-    image: require('../assets/images/cosmic.jpg'),
-    player: <Cosmic />
-  },
-  {
-    title: '"Distant Shores"',
-    slug: 'beatless',
-    image: require('../assets/images/beatless.jpg'),
-    player: <Beatless />
-  }
-]
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -94,12 +42,13 @@ export default class HomeScreen extends React.Component {
     getiOSNotificationPermission()
     listenForNotifications()
     this.handleVersionChange()
-    console.log(await AsyncStorage.getItem('reminderEnabled') === 'true')
     this.setState({
       onboarded: await AsyncStorage.getItem('onboarded'),
+      mode: parseInt(await AsyncStorage.getItem('mode')) || 0,
       storedIndex: parseInt(await AsyncStorage.getItem('mode')) || 0,
       pauseDuration: parseInt(await AsyncStorage.getItem('pauseDuration')) || 3,
-      reminderEnabled: await AsyncStorage.getItem('reminderEnabled') === 'true'
+      reminderEnabled: await AsyncStorage.getItem('reminderEnabled') === 'true',
+      reminderAfter: parseInt(await AsyncStorage.getItem('reminderAfter')) || 45,
     })
   }
 
@@ -119,14 +68,14 @@ export default class HomeScreen extends React.Component {
 
   cancelPause () {
     this.setState({ pauseActive: false })
-    this.endSequence()
+    endSequence(this.state.mode)
     KeepAwake.deactivate()
     cancelTimerEndNotification()
   }
 
   completedPause () {
     this.setState({ pauseActive: false })
-    this.endSequence()
+    endSequence(this.state.mode)
     KeepAwake.deactivate()
   }
 
@@ -137,59 +86,7 @@ export default class HomeScreen extends React.Component {
 
   onTimerUpdate (value) {
     this.setState({ timerValue: value })
-    this.playSequence()
-  }
-
-  playSequence () {
-    switch (this.state.mode) {
-      case 0:
-        playShaman()
-        break
-      case 1:
-        playChimes()
-        break
-      case 2:
-        playCoffee()
-        break
-      case 3:
-        play128()
-        break
-      case 4:
-        playWithyou()
-        break
-      case 5:
-        playCosmic()
-        break
-      case 6:
-        playBeatless()
-        break
-    }
-  }
-
-  endSequence () {
-    switch (this.state.mode) {
-      case 0:
-        endShaman()
-        break
-      case 1:
-        endChimes()
-        break
-      case 2:
-        endCoffee()
-        break
-      case 3:
-        end128()
-        break
-      case 4:
-        endWithyou()
-        break
-      case 5:
-        endCosmic()
-        break
-      case 6:
-        endBeatless()
-        break
-    }
+    playSequence(this.state.mode)
   }
 
   async onModeChange (index) {
@@ -238,11 +135,21 @@ export default class HomeScreen extends React.Component {
     }
   }
 
-  updateReminderValue (value) {
-    this.setState({ reminderAfter: value })
+  async updateReminderValue (value) {
+    console.log(value)
+    try {
+      if (!this.state.reminderEnabled) {
+        await AsyncStorage.setItem('reminderAfter', value.toString())
+      } else {
+        await AsyncStorage.setItem('reminderAfter', value.toString())
+      }
+    } catch (error) {
+      // Error saving data
+    }
   }
 
   render() {
+    const { reminderEnabled } = this.state
     var date = new Date(null)
     date.setSeconds(this.state.timerValue)
     const timeLeft = date.toISOString().substr(11, 8)
@@ -264,42 +171,12 @@ export default class HomeScreen extends React.Component {
           >
             <MaterialIcons name='settings' size={32} color='#ccc' />
           </TouchableOpacity>
-          { this.state.settingsVisible && <View style={styles.settings}>
-            <View style={styles.row}>
-              <Switch
-                value={this.state.reminderEnabled}
-                onValueChange={this.toggleReminders.bind(this)}
-              />
-              <BoldText style={styles.settingsLabel}>Break reminders</BoldText>
-            </View>
-            { this.state.reminderEnabled && <View style={{
-              padding: 20,
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <BoldText style={styles.settingsLabel}>
-                Set here how many minutes to wait (after completed session) before break reminder notification.
-                {'\n'}
-              </BoldText>
-              <NumericInput
-                minValue={1}
-                maxValue={180}
-                initValue={this.state.reminderAfter} 
-                onChange={this.updateReminderValue.bind(this)} 
-                totalHeight={48} 
-                iconSize={16}
-                step={1}
-                type='plus-minus'
-                valueType='integer'
-                rounded
-                editable
-                textColor='white'
-                iconStyle={{ color: 'white' }} 
-                leftButtonBackgroundColor='transparent'
-                rightButtonBackgroundColor='transparent'
-              />
-            </View> }
-          </View> }
+          { this.state.settingsVisible && <Settings
+            reminderEnabled={reminderEnabled}
+            reminderAfter={this.state.reminderAfter}
+            onToggleReminders={this.toggleReminders.bind(this)}
+            onUpdateReminderValue={this.updateReminderValue.bind(this)}
+          /> }
           <ImageBackground source={require('../assets/images/background.jpg')} style={styles.container}>
             <View style={styles.container} contentContainerStyle={styles.contentContainer}>
               { this.state.pauseActive && <TouchableOpacity style={styles.carouselBlocker} /> }
@@ -385,29 +262,6 @@ const styles = StyleSheet.create({
     top: 60,
     left: 30,
     zIndex: 9
-  },
-  settings: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 3,
-    padding: 40,
-    paddingTop: 150,
-    backgroundColor: 'rgba(0, 0, 0, 0.75)'
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  settingsLabel: {
-    color: Colors.white,
-    fontSize: 16,
-    marginLeft: 10,
-    marginRight: 10,
-    textAlign: 'center'
   },
   swiper: {
     alignItems: 'center'

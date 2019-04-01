@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
-import { setupAudio, fadeIn } from './utils'
-import { audioConfig } from '../assets/audio/withyou'
+import { setupAudio, fadeIn } from '../utils'
+import { audioConfig } from '../../assets/audio/beatless'
 
 // Audio loop player
 // Miika Kuisma
@@ -9,14 +9,14 @@ import { audioConfig } from '../assets/audio/withyou'
 
 let playing = false
 
-export function playWithyou () {
+export function playBeatless () {
   if (!playing) {
     triggerSound(0)
     playing = true
   }
 }
 
-export async function endWithyou () {
+export async function endBeatless () {
   await audioConfig[1].audioObject.stopAsync()
   await audioConfig[1].audioObject.playAsync()
   await audioConfig[0].audioObject.stopAsync()
@@ -31,7 +31,7 @@ async function triggerSound (sound) {
   fadeIn(audioConfig[sound].audioObject)
 }
 
-export class Withyou extends React.Component {
+export class Beatless extends React.Component {
   componentDidMount () {
     setupAudio(audioConfig)
   }

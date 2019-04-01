@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
-import { setupAudio } from './utils'
-import { audioConfig } from '../assets/audio/shaman'
+import { setupAudio } from '../utils'
+import { audioConfig } from '../../assets/audio/shaman'
 
 // Audio loop player
 // Miika Kuisma

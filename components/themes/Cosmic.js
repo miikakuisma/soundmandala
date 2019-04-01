@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
-import { setupAudio, fadeIn } from './utils'
-import { audioConfig } from '../assets/audio/128'
+import { setupAudio, fadeIn } from '../utils'
+import { audioConfig } from '../../assets/audio/cosmic'
 
 // Audio loop player
 // Miika Kuisma
@@ -9,14 +9,14 @@ import { audioConfig } from '../assets/audio/128'
 
 let playing = false
 
-export function play128 () {
+export function playCosmic () {
   if (!playing) {
     triggerSound(0)
     playing = true
   }
 }
 
-export async function end128 () {
+export async function endCosmic () {
   await audioConfig[1].audioObject.stopAsync()
   await audioConfig[1].audioObject.playAsync()
   await audioConfig[0].audioObject.stopAsync()
@@ -31,7 +31,7 @@ async function triggerSound (sound) {
   fadeIn(audioConfig[sound].audioObject)
 }
 
-export class OneTwoEight extends React.Component {
+export class Cosmic extends React.Component {
   componentDidMount () {
     setupAudio(audioConfig)
   }

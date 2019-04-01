@@ -1,8 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
-import { setupAudio } from './utils'
-import { audioConfig } from '../assets/audio/chimes'
-import { getRandom } from '../components/utils'
+import { setupAudio, getRandom } from '../utils'
+import { audioConfig } from '../../assets/audio/chimes'
 
 // Simple wind chime simulation
 // Miika Kuisma
