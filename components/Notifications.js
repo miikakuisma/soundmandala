@@ -1,5 +1,7 @@
 import { Platform } from 'react-native'
-import { Notifications, Permissions } from 'expo'
+import { Notifications } from 'expo';
+
+import * as Permissions from 'expo-permissions';
 
 let timerEndedNotificationID
 let comeBackNotificationID

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from 'react-native'
-import { Audio } from 'expo'
+import { Audio } from 'expo-av';
 
 export class MonoText extends React.Component {
   render () {

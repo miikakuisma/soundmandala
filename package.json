@@ -12,16 +12,23 @@
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
-    "expo": "^32.0.0",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "@expo/vector-icons": "^10.0.0",
+    "expo": "^33.0.0",
+    "expo-asset": "^6.0.0",
+    "expo-av": "~5.0.2",
+    "expo-font": "~5.0.1",
+    "expo-haptics": "~5.0.1",
+    "expo-keep-awake": "~5.0.1",
+    "expo-permissions": "~5.0.1",
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-numeric-input": "^1.6.5",
     "react-native-snap-carousel": "^3.7.5",
-    "react-navigation": "^3.0.9"
+    "react-navigation": "^3.11.0"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0",
-    "jest-expo": "^32.0.0"
+    "jest-expo": "^33.0.0"
   },
   "private": true
 }

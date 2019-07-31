@@ -1,6 +1,7 @@
 import React from 'react'
 import { ScrollView, Image, TouchableOpacity, ImageBackground, Slider, Switch, StyleSheet, Text, View, AsyncStorage } from 'react-native'
-import { LinearGradient, Haptic, WebBrowser, KeepAwake, Video } from 'expo'
+import KeepAwake from 'expo-keep-awake';
+import * as Haptic from 'expo-haptics';
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 import { getiOSNotificationPermission, listenForNotifications, createTimerEndNotification, cancelTimerEndNotification } from '../components/Notifications'
 import Layout from '../constants/Layout'
@@ -10,6 +11,7 @@ import { RegularText, BoldText } from '../components/utils'
 import { themes, playSequence, endSequence } from '../themes' // Array of theme config
 import Settings from '../components/Settings'
 import { BreakTimer } from '../components/BreakTimer'
+
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
