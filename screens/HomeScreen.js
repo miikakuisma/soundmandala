@@ -1,6 +1,6 @@
 import React from 'react'
 import { ScrollView, Image, TouchableOpacity, ImageBackground, Slider, Switch, StyleSheet, Text, View, AsyncStorage } from 'react-native'
-import KeepAwake from 'expo-keep-awake';
+// import KeepAwake from 'expo-keep-awake';
 import * as Haptic from 'expo-haptics';
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 import { getiOSNotificationPermission, listenForNotifications, createTimerEndNotification, cancelTimerEndNotification } from '../components/Notifications'
@@ -57,21 +57,21 @@ export default class HomeScreen extends React.Component {
 
   startPause () {
     this.setState({ pauseActive: true })
-    KeepAwake.activate()
+    // KeepAwake.activate()
     createTimerEndNotification(this.state.pauseDuration)
   }
 
   cancelPause () {
     this.setState({ pauseActive: false })
     endSequence(this.state.mode)
-    KeepAwake.deactivate()
+    // KeepAwake.deactivate()
     cancelTimerEndNotification()
   }
 
   completedPause () {
     this.setState({ pauseActive: false })
     endSequence(this.state.mode)
-    KeepAwake.deactivate()
+    // KeepAwake.deactivate()
   }
 
   updateDuration (value) {

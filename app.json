@@ -25,7 +25,9 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.moreyes.soundmandala",
       "infoPlist": {
-        "UIBackgroundModes": ["audio"]
+        "UIBackgroundModes": [
+          "audio"
+        ]
       }
     },
     "description": ""
