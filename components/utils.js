@@ -45,6 +45,7 @@ export async function setupAudio (audioConfig) {
     allowsRecordingIOS: false,
     interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
     playsInSilentModeIOS: true,
+    staysActiveInBackground: true,
     shouldDuckAndroid: true,
     playThroughEarpieceAndroid: true,
     interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX
