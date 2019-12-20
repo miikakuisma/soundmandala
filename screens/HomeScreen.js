@@ -1,15 +1,11 @@
 import React from 'react'
-import { ScrollView, Image, TouchableOpacity, ImageBackground, Slider, Switch, StyleSheet, Text, View, AsyncStorage } from 'react-native'
-// import KeepAwake from 'expo-keep-awake';
+import { Image, TouchableOpacity, ImageBackground, Slider, Switch, StyleSheet, Text, View, AsyncStorage } from 'react-native'
 import * as Haptic from 'expo-haptics';
-import Carousel, { Pagination } from 'react-native-snap-carousel'
-import { getiOSNotificationPermission, listenForNotifications, createTimerEndNotification, cancelTimerEndNotification } from '../components/Notifications'
+import Carousel from 'react-native-snap-carousel'
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
-import { MaterialIcons } from '@expo/vector-icons'
 import { RegularText, BoldText } from '../components/utils'
 import { themes, playSequence, endSequence } from '../themes' // Array of theme config
-import Settings from '../components/Settings'
 import { BreakTimer } from '../components/BreakTimer'
 
 
@@ -22,28 +18,20 @@ export default class HomeScreen extends React.Component {
     super(props)
     this.state = {
       onboarded: null, // Has user seen instructions to swipe themes
-      settingsVisible: false, // Is settings screen visible
-      reminderEnabled: true, // Break reminder notifcations turned on?
-      reminderAfter: 45, // How many minutes to wait by default for next break
       storedIndex: null, // the first slide to show on carousel
       pauseDuration: 3, // timer value in minutes
       pauseActive: false, // is timer running
-      timerValue: null, // value in the timer right now
       mode: 0 // 0 = chimes | 1 = shaman etc (refactor to "theme"?)
     }
   }
 
   async componentDidMount () {
-    getiOSNotificationPermission()
-    listenForNotifications()
     this.handleVersionChange()
     this.setState({
       onboarded: await AsyncStorage.getItem('onboarded'),
       mode: parseInt(await AsyncStorage.getItem('mode')) || 0,
       storedIndex: parseInt(await AsyncStorage.getItem('mode')) || 0,
       pauseDuration: parseInt(await AsyncStorage.getItem('pauseDuration')) || 3,
-      reminderEnabled: await AsyncStorage.getItem('reminderEnabled') === 'true',
-      reminderAfter: parseInt(await AsyncStorage.getItem('reminderAfter')) || 45,
     })
   }
 
@@ -57,21 +45,11 @@ export default class HomeScreen extends React.Component {
 
   startPause () {
     this.setState({ pauseActive: true })
-    // KeepAwake.activate()
-    createTimerEndNotification(this.state.pauseDuration)
   }
 
   cancelPause () {
     this.setState({ pauseActive: false })
     endSequence(this.state.mode)
-    // KeepAwake.deactivate()
-    cancelTimerEndNotification()
-  }
-
-  completedPause () {
-    this.setState({ pauseActive: false })
-    endSequence(this.state.mode)
-    // KeepAwake.deactivate()
   }
 
   updateDuration (value) {
@@ -80,7 +58,6 @@ export default class HomeScreen extends React.Component {
   }
 
   onTimerUpdate (value) {
-    this.setState({ timerValue: value })
     playSequence(this.state.mode)
   }
 
@@ -110,45 +87,7 @@ export default class HomeScreen extends React.Component {
     }
   }
 
-  toggleSettings () {
-    this.setState({ settingsVisible: !this.state.settingsVisible })
-  }
-
-  async toggleReminders () {
-    try {
-      if (!this.state.reminderEnabled) {
-        // console.log('setting reminder to: true')
-        this.setState({ reminderEnabled: true })
-        await AsyncStorage.setItem('reminderEnabled', 'true')
-      } else {
-        // console.log('setting reminder to: false')
-        this.setState({ reminderEnabled: false })
-        await AsyncStorage.setItem('reminderEnabled', 'false')
-      }
-    } catch (error) {
-      // Error saving data
-    }
-  }
-
-  async updateReminderValue (value) {
-    try {
-      if (!this.state.reminderEnabled) {
-        await AsyncStorage.setItem('reminderAfter', value.toString())
-      } else {
-        await AsyncStorage.setItem('reminderAfter', value.toString())
-      }
-    } catch (error) {
-      // Error saving data
-    }
-  }
-
   render() {
-    const { reminderEnabled } = this.state
-    var date = new Date(null)
-    date.setSeconds(this.state.timerValue)
-    const timeLeft = date.toISOString().substr(11, 8)
-    const minutesLeft = parseInt(date.toISOString().substr(14, 2))
-    // const percentLeft = 100 - Math.floor(100/(this.state.pauseDuration * 60) * this.state.timerValue)
     if (this.state.storedIndex !== null) {
       return (
         <View style={styles.container}>
@@ -159,18 +98,6 @@ export default class HomeScreen extends React.Component {
           >
             <ImageBackground source={require('../assets/images/onboarding.png')} style={styles.onboardingImg} />
           </TouchableOpacity> }
-          { !this.state.pauseActive && <TouchableOpacity
-            onPress={this.toggleSettings.bind(this)}
-            style={styles.settingsButton}
-          >
-            <MaterialIcons name='settings' size={32} color='#ccc' />
-          </TouchableOpacity> }
-          { this.state.settingsVisible && <Settings
-            reminderEnabled={reminderEnabled}
-            reminderAfter={this.state.reminderAfter}
-            onToggleReminders={this.toggleReminders.bind(this)}
-            onUpdateReminderValue={this.updateReminderValue.bind(this)}
-          /> }
           <ImageBackground source={require('../assets/images/background.jpg')} style={styles.container}>
             <View style={styles.container} contentContainerStyle={styles.contentContainer}>
               { this.state.pauseActive && <TouchableOpacity style={styles.carouselBlocker} /> }
@@ -192,37 +119,13 @@ export default class HomeScreen extends React.Component {
               />
               <View style={styles.timerContainer}>
                 <RegularText style={styles.duration}>
-                  {this.state.pauseActive ? 'Close Your Eyes?' : themes[this.state.mode].title}
+                  {themes[this.state.mode].title}
                 </RegularText>
-                <BoldText style={styles.titleText}>
-                 {this.state.pauseActive ? timeLeft : this.state.pauseDuration + ' minutes'}
-                </BoldText>
-                <Slider
-                  style={styles.slider}
-                  disabled={this.state.pauseActive}
-                  minimumValue={1}
-                  maximumValue={30}
-                  value={this.state.pauseDuration}
-                  step={1}
-                  onValueChange={this.updateDuration.bind(this)}
-                  onSlidingComplete={async () => {
-                    // Store the value to be recalled next time
-                    try {
-                      await AsyncStorage.setItem('pauseDuration', this.state.pauseDuration.toString())
-                    } catch (error) {
-                      // Error saving data
-                    }
-                  }}
-                />
                 <BreakTimer
-                  duration={this.state.pauseDuration}
                   autorun={false}
-                  reminderEnabled={this.state.reminderEnabled}
-                  reminderAfter={this.state.reminderAfter}
                   onStart={this.startPause.bind(this)}
                   onUpdate={this.onTimerUpdate.bind(this)}
                   onCancel={this.cancelPause.bind(this)}
-                  onCompleted={this.completedPause.bind(this)}
                 />
               </View>
             </View>
@@ -308,7 +211,7 @@ const styles = StyleSheet.create({
   timerContainer: {
     position: 'absolute',
     width: Layout.window.width,
-    height: 280,
+    height: 180,
     left: 0,
     bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
