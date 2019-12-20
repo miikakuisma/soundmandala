@@ -1,5 +1,6 @@
 import React from 'react'
 import { Image, TouchableOpacity, ImageBackground, Slider, Switch, StyleSheet, Text, View, AsyncStorage } from 'react-native'
+import { Video } from 'expo-av';
 import * as Haptic from 'expo-haptics';
 import Carousel from 'react-native-snap-carousel'
 import Layout from '../constants/Layout'
@@ -117,6 +118,16 @@ export default class HomeScreen extends React.Component {
                 onSnapToItem={(index) => this.onModeChange(index)}
                 firstItem={this.state.storedIndex}
               />
+              {/* <Video
+                source={require('../assets/video/breather3.mp4')}
+                rate={1.0}
+                volume={1.0}
+                isMuted={true}
+                shouldPlay={this.state.pauseActive}
+                isLooping
+                resizeMode='cover'
+                style={styles.modeVideo}
+              /> */}
               <View style={styles.timerContainer}>
                 <RegularText style={styles.duration}>
                   {themes[this.state.mode].title}
