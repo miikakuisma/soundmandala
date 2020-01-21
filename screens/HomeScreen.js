@@ -1,11 +1,10 @@
 import React from 'react'
-import { Image, TouchableOpacity, ImageBackground, Slider, Switch, StyleSheet, Text, View, AsyncStorage } from 'react-native'
-import { Video } from 'expo-av';
+import { Image, TouchableOpacity, ImageBackground, StyleSheet, View, AsyncStorage } from 'react-native'
 import * as Haptic from 'expo-haptics';
 import Carousel from 'react-native-snap-carousel'
 import Layout from '../constants/Layout'
 import Colors from '../constants/Colors'
-import { RegularText, BoldText } from '../components/utils'
+import { RegularText } from '../components/utils'
 import { themes, playSequence, endSequence } from '../themes' // Array of theme config
 import { BreakTimer } from '../components/BreakTimer'
 
@@ -22,26 +21,17 @@ export default class HomeScreen extends React.Component {
       storedIndex: null, // the first slide to show on carousel
       pauseDuration: 3, // timer value in minutes
       pauseActive: false, // is timer running
-      mode: 0 // 0 = chimes | 1 = shaman etc (refactor to "theme"?)
+      mode: 0 // 0 = chimes | 1 = shaman etc
     }
   }
 
   async componentDidMount () {
-    this.handleVersionChange()
     this.setState({
       onboarded: await AsyncStorage.getItem('onboarded'),
       mode: parseInt(await AsyncStorage.getItem('mode')) || 0,
       storedIndex: parseInt(await AsyncStorage.getItem('mode')) || 0,
       pauseDuration: parseInt(await AsyncStorage.getItem('pauseDuration')) || 3,
     })
-  }
-
-  handleVersionChange () {
-    let pkg = require('../app.json')
-    console.log('App version: ', pkg.expo.version)
-    // if (pkg.expo.version <= '1.0.5') {
-    //   AsyncStorage.clear()
-    // }
   }
 
   startPause () {
@@ -64,7 +54,6 @@ export default class HomeScreen extends React.Component {
 
   async onModeChange (index) {
     this.setState({ mode: index })
-    // Store the value to be recalled next time
     try {
       await AsyncStorage.setItem('mode', index.toString())
     } catch (error) {
@@ -118,16 +107,6 @@ export default class HomeScreen extends React.Component {
                 onSnapToItem={(index) => this.onModeChange(index)}
                 firstItem={this.state.storedIndex}
               />
-              {/* <Video
-                source={require('../assets/video/breather3.mp4')}
-                rate={1.0}
-                volume={1.0}
-                isMuted={true}
-                shouldPlay={this.state.pauseActive}
-                isLooping
-                resizeMode='cover'
-                style={styles.modeVideo}
-              /> */}
               <View style={styles.timerContainer}>
                 <RegularText style={styles.duration}>
                   {themes[this.state.mode].title}
